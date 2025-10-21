@@ -1,14 +1,13 @@
-FROM ruby:3.4.7-alpine
+FROM ruby:3.4.7-alpine AS builder
 
 ENV APP_HOME=/app
 
 RUN apk add --no-cache \
       build-base \
-      postgresql-client \
       postgresql-dev \
       tzdata \
       git \
-      bash
+    && rm -rf /var/cache/apk/*
 
 WORKDIR $APP_HOME
 
@@ -17,6 +16,13 @@ RUN gem update --system
 COPY Gemfile Gemfile.lock ./
 
 RUN bundle install
+
+FROM ruby:3.4.7-alpine
+
+RUN apk add --no-cache postgresql-libs bash && rm -rf /var/cache/apk/*
+
+# copy over deps
+COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
 
 COPY . .
 
