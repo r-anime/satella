@@ -8,4 +8,6 @@ This project is meant to be run in conjunction with [modbot](https://github.com/
 
 TODO: How to setup this project and run it.
 
+![Satella](profile_pic.png)
+
 aishiteru aishiteru aishiteru aishiteru aishiteru aishiteru aishiteru aishiteru aishiteru aishiteru aishiteru aishiteru aishiteru aishiteru aishiteru 
