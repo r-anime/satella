@@ -4,13 +4,15 @@ ENV APP_HOME=/app
 
 RUN apk add --no-cache \
       build-base \
-      sqlite-dev \
-      libffi-dev \
+      postgresql-client \
+      postgresql-dev \
       tzdata \
       git \
       bash
 
 WORKDIR $APP_HOME
+
+RUN gem update --system
 
 COPY Gemfile Gemfile.lock ./
 
