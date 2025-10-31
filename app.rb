@@ -11,5 +11,5 @@ opts = {
 }
 
 reddit = Redd.it(**opts)
-resp = reddit.client.get('/api/v1/me', nocache: true)
+resp = reddit.client.get('/api/v1/me')
 puts "resp: #{resp.body.to_json}"

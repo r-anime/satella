@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 source "https://rubygems.org"
 
-# ruby '~> 3.4.7'
-ruby '~> 3.3.10' # must be 3.3 for now so that http doesn't stop working (SSL error on auth)
+ruby '~> 3.4.7'
 git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
+gem 'openssl', "~> 3.3" # openssl 3.3.0 break Redd / Http
 gem "activerecord", "~> 8.0"
 gem "activesupport", "~> 8.0"
 gem 'dotenv', "~> 3.1"
