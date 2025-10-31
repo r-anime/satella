@@ -1,4 +1,4 @@
-FROM ruby:3.3.10-alpine AS builder
+FROM ruby:3.4.7-alpine AS builder
 
 ENV APP_HOME=/app
 
@@ -17,7 +17,7 @@ COPY Gemfile Gemfile.lock ./
 
 RUN bundle install
 
-FROM ruby:3.3.10-alpine
+FROM ruby:3.4.7-alpine
 
 RUN apk add --no-cache postgresql-libs bash && rm -rf /var/cache/apk/*
 
