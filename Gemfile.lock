@@ -100,6 +100,7 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     uri (1.1.0)
+    yaml (0.4.0)
 
 PLATFORMS
   aarch64-linux
@@ -122,9 +123,11 @@ DEPENDENCIES
   bunny (~> 2.24)
   dotenv (~> 3.1)
   httparty (~> 0.23.1)
+  json (~> 2.15)
   openssl (~> 3.3)
   pg (~> 1.6)
   redd!
+  yaml (~> 0.4.0)
 
 RUBY VERSION
    ruby 3.4.7p58
