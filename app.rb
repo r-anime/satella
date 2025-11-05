@@ -12,7 +12,7 @@ require_relative './src/rules'
 # DONE test on stage
 # DONE implement auto update for rules (reddit:  "details": "Updated AutoModerator configuration", "action": "wikirevise")
 # MOSTLY DONE implement main loop
-# TODO implement easy removal and report methods
+# DONE implement easy removal and report methods
 # TODO implement SMC (only on posts from tomorrow)
 # TODO implement isekai quartet SMC
 # TODO implement Source keyword checking
@@ -75,8 +75,8 @@ def handle_mod_action(active_rule_modules, message)
   $logger.debug "[mod_actions] Received: #{message}"
 
   active_rule_modules
-    .select {|rule_module| rule_module.static_mod_action_check?(message)}
-    .map {|rule_module| rule_module.mod_action_check(message)}
+    .select { |rule_module| rule_module.static_mod_action_check?(message) }
+    .map { |rule_module| rule_module.mod_action_check(message) }
 end
 
 main
