@@ -1,16 +1,17 @@
 class RulesConfig
   ID_PREFIX = "AnimeMod 2.0: "
 
-  attr_accessor :reddit, :rule_modules
-  attr_reader :configs, :active_rule_modules
+  attr_accessor :reddit
+  attr_reader :rule_modules, :configs, :active_rule_modules
 
-  def initialize(reddit, rule_modules)
+  def initialize(reddit:)
     @reddit = reddit
-    @rule_modules = rule_modules
-    @rule_modules.each do |rule_module|
-      rule_module.rules_config = self
-    end
+    @rule_modules = []
     @configs = {}
+  end
+
+  def add_rule_module(rule_module)
+    @rule_modules << rule_module
   end
 
   # @mutate This mutates the object

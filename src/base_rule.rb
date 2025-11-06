@@ -2,8 +2,10 @@ class BaseRule
   attr_reader :reddit
   attr_accessor :rules_config
 
-  def initialize(reddit)
+  def initialize(reddit:, rules_config:)
     @reddit = reddit
+    @rules_config = rules_config
+    rules_config.add_rule_module(self)
   end
 
   # @abstract true

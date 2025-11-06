@@ -24,10 +24,11 @@ def main
     username: ENV['REDDIT_USERNAME'],
     password: ENV['REDDIT_USER_PASSWORD']
   )
+
+  rules_config = RulesConfig.new(reddit:)
   rule_modules = BaseRule.subclasses.map do |rule|
-    rule.new(reddit)
+    rule.new(reddit:, rules_config:)
   end
-  rules_config = RulesConfig.new(reddit, rule_modules)
   rules_config.fetch_config!
 
   $logger.info "active rules: #{rules_config.active_rule_modules.map { |rm| "#{rm.name}: #{rm.priority}" }}"
