@@ -52,7 +52,6 @@ class RabbitService
       handler.call(JSON.parse(body, symbolize_names: true))
 
       delivery_info.channel.ack(delivery_info.delivery_tag)
-      exit # DEBUG
     rescue => e
       attempt = properties&.headers&.[](ATTEMPT_HEADER) || 1
       if attempt < MAX_ATTEMPTS
@@ -71,7 +70,6 @@ class RabbitService
         $logger.warn e.backtrace.join("\n")
         delivery_info.channel.nack(delivery_info.delivery_tag, false, false)
       end
-      exit # DEBUG
     end
   end
 end

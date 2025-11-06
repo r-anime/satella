@@ -176,6 +176,13 @@ class BaseRule
     end
   end
 
+  def to_short_s
+    attrs = [:name, :priority]
+              .map { |attr| "#{attr}=#{send(attr)&.inspect}" }
+              .join(', ')
+    "#<#{self.class} #{attrs}>"
+  end
+
   def inspect
     attrs = [:name, :priority, :config]
               .map { |attr| "#{attr}=#{send(attr)&.inspect}" }

@@ -26,7 +26,7 @@ def main
   )
 
   rules_config = RulesConfig.new(reddit:)
-  rule_modules = BaseRule.subclasses.map do |rule|
+  rule_modules = Rules.rule_modules.map do |rule|
     rule.new(reddit:, rules_config:)
   end
   rules_config.fetch_config!

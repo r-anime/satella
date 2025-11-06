@@ -33,6 +33,12 @@ class RedditService
     distinguish(reply_id, sticky:)
   end
 
+  def mod_comment(fullname, comment_text, sticky: false, how: 'yes')
+    comment_json = reply_comment(fullname, comment_text)
+    reply_id = comment_json[:json][:data][:things][0][:data][:name]
+    distinguish(reply_id, sticky:)
+  end
+
   def remove(fullname, spam: false)
     post("/api/remove", {
       api_type: 'json',

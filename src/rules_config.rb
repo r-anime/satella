@@ -23,11 +23,13 @@ class RulesConfig
     # puts "automod_configs: #{automod_configs.inspect}"
 
     new_configs = {}
-    automod_configs.each do |automod_config|
+    config_indexes = {}
+    automod_configs.each_with_index do |automod_config, i|
       # puts("\nautomod_config: #{automod_config}")
       next unless automod_config['id']&.start_with?(ID_PREFIX)
       config_name = automod_config['id'].delete_prefix(ID_PREFIX)
       new_configs[config_name] = automod_config
+      config_indexes[config_name] = i
     end
 
     @configs = new_configs
@@ -37,11 +39,11 @@ class RulesConfig
     end.each do |rule_module|
       rule_module.on_upsert
     end.sort_by do |rule_module|
-      -rule_module.priority
+      [-rule_module.priority, config_indexes[rule_module.name]]
     end
 
     @active_rule_modules = new_active_rule_modules
-    $logger.info 'Successfully updated rules config'
+    $logger.info "Successfully updated rules config, active rules: #{@active_rule_modules.map(&:to_short_s)}"
 
     nil
   end

@@ -7,6 +7,6 @@ end
 
 module Rules
   def self.rule_modules
-    BaseRule.subclasses
+    BaseRule.descendants
   end
 end
