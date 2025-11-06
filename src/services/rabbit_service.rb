@@ -20,8 +20,6 @@ class RabbitService
     @retry_exchange_name = retry_exchange_name
     @queues = queues
     @handlers = handlers
-
-    puts "#{{host:, port:, username:, password:, vhost:, log_level:}}"
     @connection = Bunny.new(host:, port:, username:, password:, vhost:, log_level:)
   end
 
