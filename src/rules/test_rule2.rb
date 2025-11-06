@@ -1,8 +1,10 @@
-class TestRule2 < BaseRule
-  def name
-    "Test Rule 2"
-  end
+module Rules
+  class TestRule2 < BaseRule
+    def name
+      "Test Rule 2"
+    end
 
-  def on_upsert
+    def on_upsert
+    end
   end
 end
