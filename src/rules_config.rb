@@ -20,12 +20,10 @@ class RulesConfig
   def fetch_config!
     automod_configs = @reddit.fetch_automod_rules(ENV['SUBREDDIT_NAME_TO_ACT_ON'])
     $logger.debug 'Fetched automod rules'
-    # puts "automod_configs: #{automod_configs.inspect}"
 
     new_configs = {}
     config_indexes = {}
     automod_configs.each_with_index do |automod_config, i|
-      # puts("\nautomod_config: #{automod_config}")
       next unless automod_config['id']&.start_with?(ID_PREFIX)
       config_name = automod_config['id'].delete_prefix(ID_PREFIX)
       new_configs[config_name] = automod_config

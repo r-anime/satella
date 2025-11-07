@@ -7,14 +7,6 @@ require_relative './src/db'
 require_relative './src/rules_config'
 require_relative './src/rules'
 
-# DONE connect to rabbitmq
-# DONE retries for rabbitmq
-# DONE test on stage
-# DONE implement auto update for rules (reddit:  "details": "Updated AutoModerator configuration", "action": "wikirevise")
-# MOSTLY DONE implement main loop
-# DONE implement easy removal and report methods
-# TODO implement SMC (only on posts from tomorrow)
-# TODO implement isekai quartet SMC
 # TODO implement Source keyword checking
 def main
   reddit = RedditService.new(
