@@ -1,6 +1,7 @@
 module Rules
   class SourceMaterialCornerIsekaiQuartetRule < SourceMaterialCornerRule
-    FLAIR_NAME_REGEX = /Episode/i
+    FLAIR_NAME_REGEX = /Episode/i # not present in original rule
+    DATE_GATE = Time.parse(ENV["DATE_GATE"]) # temp
 
     def name
       "Source Material Corner Rule (Isekai Quartet)"
@@ -11,9 +12,9 @@ module Rules
       @title_regex = /#{Regexp.escape(config["title"])}/i
     end
 
-
     def static_post_check?(rabbit_message)
-      FLAIR_NAME_REGEX.match?(rabbit_message[:reddit][:link_flair_text]) &&
+      DATE_GATE <= Time.at(rabbit_message[:reddit][:created_utc]) &&
+        FLAIR_NAME_REGEX.match?(rabbit_message[:reddit][:link_flair_text]) &&
         @authors_regex.match?(rabbit_message[:reddit][:author][:name]) &&
         @title_regex.match?(rabbit_message[:reddit][:title])
     end

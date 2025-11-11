@@ -2,7 +2,7 @@ require 'time'
 
 module Rules
   class SourceMaterialRule < BaseRule
-    DATE_GATE = Time.parse("2025-11-11T09:34:14Z")
+    DATE_GATE = Time.parse(ENV["DATE_GATE"]) # temp
 
     def name
       "Source Corner Rule"

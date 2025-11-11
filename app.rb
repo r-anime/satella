@@ -7,7 +7,6 @@ require_relative './src/db'
 require_relative './src/rules_config'
 require_relative './src/rules'
 
-# TODO put datetime gates on rule checking
 def main
   reddit = RedditService.new(
     user_agent: ENV['REDDIT_USER_AGENT'],
