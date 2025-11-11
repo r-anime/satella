@@ -7,7 +7,7 @@ require_relative './src/db'
 require_relative './src/rules_config'
 require_relative './src/rules'
 
-# TODO implement Source keyword checking
+# TODO put datetime gates on rule checking
 def main
   reddit = RedditService.new(
     user_agent: ENV['REDDIT_USER_AGENT'],
@@ -55,7 +55,11 @@ def get_queues(active_rule_modules)
 end
 
 def handle_post(active_rule_modules, message)
-  $logger.debug "[posts] Received: #{message}"
+  if $logger.level <= Logger::DEBUG
+    $logger.info "[posts] Received: #{message["reddit"]["id"]}"
+  else
+    $logger.debug "[posts] Received: #{message}"
+  end
 
   results = active_rule_modules
               .select { |rule_module| rule_module.static_post_check?(message) }
@@ -66,7 +70,11 @@ def handle_post(active_rule_modules, message)
 end
 
 def handle_comment(active_rule_modules, message)
-  $logger.debug "[comments] Received: #{message}"
+  if $logger.level <= Logger::DEBUG
+    $logger.info "[comments] Received: #{message["reddit"]["id"]}"
+  else
+    $logger.debug "[comments] Received: #{message}"
+  end
 
   results = active_rule_modules
               .select { |rule_module| rule_module.static_comment_check?(message) }
@@ -77,7 +85,11 @@ def handle_comment(active_rule_modules, message)
 end
 
 def handle_mod_action(active_rule_modules, message)
-  $logger.debug "[mod_actions] Received: #{message}"
+  if $logger.level <= Logger::DEBUG
+    $logger.info "[mod_actions] Received: #{message["reddit"]["id"]}"
+  else
+    $logger.debug "[mod_actions] Received: #{message}"
+  end
 
   results = active_rule_modules
               .select { |rule_module| rule_module.static_mod_action_check?(message) }

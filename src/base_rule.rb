@@ -1,5 +1,8 @@
 require_relative './rule_result'
 
+# TODO have a standard class that is a subclass of this
+# it should parse auto mod and provide baseline checks for anything that is there
+# it should have a list of auto mod fields to ignore.
 class BaseRule
   attr_reader :reddit
   attr_accessor :rules_config
@@ -159,7 +162,6 @@ class BaseRule
       end.reject { |(key, value)| !value }.to_h
       "#{self.class.name} Actioning message: #{attrs}"
     end
-    exit
   end
 
   # @overridable true (you should still call super)
