@@ -9,7 +9,7 @@ require_relative './src/rules'
 
 def main
   reddit = RedditService.new(
-    user_agent: ENV['REDDIT_USER_AGENT'],
+    user_agent: ENV['REDDIT_USER_AGENT_RUBY'],
     client_id: ENV['REDDIT_CLIENT_ID'],
     secret: ENV['REDDIT_SECRET'],
     username: ENV['REDDIT_USERNAME'],
@@ -55,9 +55,9 @@ end
 
 def handle_post(active_rule_modules, message)
   if $logger.level <= Logger::DEBUG
-    $logger.info "[posts] Received: #{message["reddit"]["id"]}"
-  else
     $logger.debug "[posts] Received: #{message}"
+  else
+    $logger.info "[posts] Received: #{message["reddit"]["id"]}"
   end
 
   results = active_rule_modules
@@ -70,9 +70,9 @@ end
 
 def handle_comment(active_rule_modules, message)
   if $logger.level <= Logger::DEBUG
-    $logger.info "[comments] Received: #{message["reddit"]["id"]}"
-  else
     $logger.debug "[comments] Received: #{message}"
+  else
+    $logger.info "[comments] Received: #{message["reddit"]["id"]}"
   end
 
   results = active_rule_modules
@@ -85,9 +85,9 @@ end
 
 def handle_mod_action(active_rule_modules, message)
   if $logger.level <= Logger::DEBUG
-    $logger.info "[mod_actions] Received: #{message["reddit"]["id"]}"
-  else
     $logger.debug "[mod_actions] Received: #{message}"
+  else
+    $logger.info "[mod_actions] Received: #{message["reddit"]["id"]}"
   end
 
   results = active_rule_modules
