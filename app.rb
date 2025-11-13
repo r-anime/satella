@@ -57,7 +57,7 @@ def handle_post(active_rule_modules, message)
   if $logger.level <= Logger::DEBUG
     $logger.debug "[posts] Received: #{message}"
   else
-    $logger.info "[posts] Received: #{message["reddit"]["id"]}"
+    $logger.info "[posts] Received: #{message[:reddit][:id]}"
   end
 
   results = active_rule_modules
@@ -72,7 +72,7 @@ def handle_comment(active_rule_modules, message)
   if $logger.level <= Logger::DEBUG
     $logger.debug "[comments] Received: #{message}"
   else
-    $logger.info "[comments] Received: #{message["reddit"]["id"]}"
+    $logger.info "[comments] Received: #{message[:reddit][:id]}"
   end
 
   results = active_rule_modules
@@ -87,7 +87,7 @@ def handle_mod_action(active_rule_modules, message)
   if $logger.level <= Logger::DEBUG
     $logger.debug "[mod_actions] Received: #{message}"
   else
-    $logger.info "[mod_actions] Received: #{message["reddit"]["id"]}"
+    $logger.info "[mod_actions] Received: #{message[:reddit][:id]}"
   end
 
   results = active_rule_modules
