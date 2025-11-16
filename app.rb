@@ -17,10 +17,10 @@ def main
   )
 
   rules_config = RulesConfig.new(reddit:)
-  rule_modules = Rules.rule_modules.map do |rule|
+  Rules.rule_modules.each do |rule|
     rule.new(reddit:, rules_config:)
   end
-  rules_config.fetch_config!
+  rules_config.start_up!
 
   $logger.info "active rules: #{rules_config.active_rule_modules.map { |rm| "#{rm.name}: #{rm.priority}" }}"
 
@@ -61,9 +61,10 @@ def handle_post(active_rule_modules, message)
   end
 
   results = active_rule_modules
-              .select { |rule_module| rule_module.static_post_check?(message) }
-              .map { |rule_module| rule_module.post_check(message) }
-              .reject { |rule_result| rule_result.is_a?(RuleResult::NoAction) }
+    .select { |rule_module| rule_module.base_static_post_check?(message) }
+    .select { |rule_module| rule_module.static_post_check?(message) }
+    .map { |rule_module| rule_module.post_check(message) }
+    .reject { |rule_result| rule_result.is_a?(RuleResult::NoAction) }
   # TODO actually process and merge results into generic grand action
   results.each { |rule_result| rule_result.rule_module.execute_post(rule_result) }
 end
@@ -76,9 +77,10 @@ def handle_comment(active_rule_modules, message)
   end
 
   results = active_rule_modules
-              .select { |rule_module| rule_module.static_comment_check?(message) }
-              .map { |rule_module| rule_module.comment_check(message) }
-              .reject { |rule_result| rule_result.is_a?(RuleResult::NoAction) }
+    .select { |rule_module| rule_module.base_static_comment_check?(message) }
+    .select { |rule_module| rule_module.static_comment_check?(message) }
+    .map { |rule_module| rule_module.comment_check(message) }
+    .reject { |rule_result| rule_result.is_a?(RuleResult::NoAction) }
   # TODO actually process and merge results into generic grand action
   results.map { |rule_result| rule_result.rule_module.execute_comment(rule_result) }
 end
@@ -91,9 +93,10 @@ def handle_mod_action(active_rule_modules, message)
   end
 
   results = active_rule_modules
-              .select { |rule_module| rule_module.static_mod_action_check?(message) }
-              .map { |rule_module| rule_module.mod_action_check(message) }
-              .reject { |rule_result| rule_result.is_a?(RuleResult::NoAction) }
+    .select { |rule_module| rule_module.base_static_mod_action_check?(message) }
+    .select { |rule_module| rule_module.static_mod_action_check?(message) }
+    .map { |rule_module| rule_module.mod_action_check(message) }
+    .reject { |rule_result| rule_result.is_a?(RuleResult::NoAction) }
   # TODO actually process and merge results into generic grand action
   results.map { |rule_result| rule_result.rule_module.execute_mod_action(rule_result) }
 end

@@ -23,7 +23,7 @@ class RabbitService
     @connection = Bunny.new(host:, port:, username:, password:, vhost:, log_level:)
   end
 
-  def listen!()
+  def listen!
     @connection.start
     channel = @connection.create_channel
     retry_exchange = channel.direct(@retry_exchange_name, durable: true)

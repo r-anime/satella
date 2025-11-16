@@ -21,6 +21,22 @@ class BaseRule
     raise NotImplementedError, "#{self.class} must implement #name"
   end
 
+  # @overrideable false
+  # @parallel false
+  # @fast false
+  # a hook to run when the rules are initialized or updated
+  # this should be the sole initialization of (automod based) config for a rule module
+  # @return nil
+  def base_on_upsert
+    if config
+      @check_mods = if !config["moderators_exempt"].nil?
+        !config["moderators_exempt"]
+      else
+        !["report", "remove"].include?(config["action"])
+      end
+    end
+  end
+
   # @abstract true
   # @parallel false
   # @fast false
@@ -55,6 +71,39 @@ class BaseRule
     false
   end
 
+  # @overridable false
+  # @parallel false
+  # @fast true
+  # A hook for global static post eligibility to be run.
+  # This should not be overridden. Use static_post_check? instead.
+  # @param rabbit_message The rabbitmq message with the reddit and db object in json form
+  # @return true if the other checker should be invoked
+  def base_static_post_check?(rabbit_message)
+    @check_mods || !rules_config.mods.include?(rabbit_message["author"]["name"])
+  end
+
+  # @overridable false
+  # @parallel false
+  # @fast true
+  # A hook for global static comment eligibility to be run.
+  # This should not be overridden. Use static_comment_check? instead.
+  # @param rabbit_message The rabbitmq message with the reddit and db object in json form
+  # @return true if the other checker should be invoked
+  def base_static_comment_check?(rabbit_message)
+    @check_mods || !rules_config.mods.include?(rabbit_message[:reddit][:author][:name])
+  end
+
+  # @overridable false
+  # @parallel false
+  # @fast true
+  # A hook for global static mod action eligibility to be run.
+  # This should not be overridden. Use static_mod_action_check? instead.
+  # @param rabbit_message The rabbitmq message with the reddit and db object in json form
+  # @return true if the other checker should be invoked
+  def base_static_mod_action_check?(_rabbit_message)
+    true
+  end
+
   # @overridable true
   # @parallel false
   # @fast true
@@ -62,7 +111,7 @@ class BaseRule
   # There should be no long processing like a DB call or an API call in this.
   # This is just to determine if it remotely makes sense to run the checker for this given the existing data.
   # @param rabbit_message The rabbitmq message with the reddit and db object in json form
-  # @return true if the main checker should be invoker
+  # @return true if the main checker should be invoked
   def static_post_check?(_rabbit_message)
     false
   end
@@ -74,7 +123,7 @@ class BaseRule
   # There should be no long processing like a DB call or an API call in this.
   # This is just to determine if it remotely makes sense to run the checker for this given the existing data.
   # @param rabbit_message The rabbitmq message with the reddit and db object in json form
-  # @return true if the main checker should be invoker
+  # @return true if the main checker should be invoked
   def static_comment_check?(_rabbit_message)
     false
   end
@@ -86,7 +135,7 @@ class BaseRule
   # There should be no long processing like a DB call or an API call in this.
   # This is just to determine if it remotely makes sense to run the checker for this given the existing data.
   # @param rabbit_message The rabbitmq message with the reddit and db object in json form
-  # @return true if the main checker should be invoker
+  # @return true if the main checker should be invoked
   def static_mod_action_check?(_rabbit_message)
     false
   end
@@ -140,7 +189,7 @@ class BaseRule
   def execute_post(result)
     $logger.info do
       attrs = [:id, [:author, :name], :link_flair_text, :title]
-                .map { Array(it) }.map do
+        .map { Array(it) }.map do
         [it.map(&:to_s).join('.').to_sym, result.rabbit_message[:reddit].dig(*it)]
       end.reject { |(key, value)| !value }.to_h
       "#{self.class.name} Actioning message: #{attrs}"
@@ -157,7 +206,7 @@ class BaseRule
   def execute_comment(result)
     $logger.info do
       attrs = [:id, [:author, :name], :body]
-                .map { Array(it) }.map do
+        .map { Array(it) }.map do
         [it.map(&:to_s).join('.').to_sym, result.rabbit_message[:reddit].dig(*it).truncate(300)]
       end.reject { |(key, value)| !value }.to_h
       "#{self.class.name} Actioning message: #{attrs}"
@@ -180,15 +229,15 @@ class BaseRule
 
   def to_short_s
     attrs = [:name, :priority]
-              .map { |attr| "#{attr}=#{send(attr)&.inspect}" }
-              .join(', ')
+      .map { |attr| "#{attr}=#{send(attr)&.inspect}" }
+      .join(', ')
     "#<#{self.class} #{attrs}>"
   end
 
   def inspect
     attrs = [:name, :priority, :config]
-              .map { |attr| "#{attr}=#{send(attr)&.inspect}" }
-              .join(', ')
+      .map { |attr| "#{attr}=#{send(attr)&.inspect}" }
+      .join(', ')
     "#<#{self.class} #{attrs}>"
   end
 end
