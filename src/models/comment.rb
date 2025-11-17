@@ -7,21 +7,20 @@ class Comment < ActiveRecord::Base
   has_many :comments, class_name: "Comment", foreign_key: "parent_id", dependent: :destroy
   has_many :mod_actions, foreign_key: "target_comment_id", dependent: :destroy
 
-  # TODO not correct, always true
   def self.is_in_source_corner?(comment_id36)
-    top_level_body_matches?(comment_id36, "# Source Material Corner%")
+    top_level_body_matches?(comment_id36, "# Source Material Corner%", top_level_distinguished: true)
   end
 
-  def self.top_level_body_matches?(comment_id36, top_level_body_matcher)
+  def self.top_level_body_matches?(comment_id36, top_level_body_matcher, top_level_distinguished: nil)
     sql = <<~SQL
       WITH RECURSIVE parent_chain AS (
-        SELECT id, parent_id, body
+        SELECT id, parent_id, body, distinguished
         FROM comments
         WHERE id36 = ?
 
         UNION ALL
 
-        SELECT c.id, c.parent_id, c.body
+        SELECT c.id, c.parent_id, c.body, c.distinguished
         FROM comments c
         JOIN parent_chain a ON c.id = a.parent_id
       )
@@ -29,11 +28,12 @@ class Comment < ActiveRecord::Base
         SELECT 1 FROM parent_chain
         WHERE parent_id IS NULL
         AND body ILIKE ?
+        #{top_level_distinguished.nil? ? "" : "AND distinguished = ?"}
       ) AS result;
     SQL
-    ActiveRecord::Base.connection.select_value(
-      ActiveRecord::Base.send(:sanitize_sql_array, [sql, comment_id36, top_level_body_matcher])
-    )
+    args = [sql, comment_id36, top_level_body_matcher]
+    args << top_level_distinguished unless top_level_distinguished.nil?
+    ActiveRecord::Base.connection.select_value(ActiveRecord::Base.send(:sanitize_sql_array, args))
   end
 
   def is_in_source_corner?
