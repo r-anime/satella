@@ -12,6 +12,7 @@ class RuleResult
   module ActionLevel
     REMOVE = :remove
     REPORT = :report
+    MOD_MAIL = :mod_mail
     MOD_COMMENT = :mod_comment
     COMMENT = :comment
     REFLAIR = :reflair
@@ -49,6 +50,16 @@ class RuleResult
     def initialize(rule_module:, rabbit_message:, report_template:)
       super(rule_module:, level: ActionLevel::REPORT, rabbit_message:)
       @report_template = report_template
+    end
+  end
+
+  class ModMailAction < BaseAction
+    attr_reader :subject_template, :message_template
+
+    def initialize(rule_module:, rabbit_message:, subject_template:, message_template:)
+      super(rule_module:, level: ActionLevel::MOD_MAIL, rabbit_message:)
+      @subject_template = subject_template
+      @message_template = message_template
     end
   end
 
