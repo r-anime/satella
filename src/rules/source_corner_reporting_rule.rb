@@ -1,11 +1,11 @@
 require 'time'
 
 module Rules
-  class SourceMaterialRule < BaseRule
+  class SourceCornerReportingRule < BaseRule
     DATE_GATE = Time.parse(ENV["DATE_GATE"]) # temp
 
     def name
-      "Source Corner Rule"
+      "Source Corner Reporting Rule"
     end
 
     def on_upsert

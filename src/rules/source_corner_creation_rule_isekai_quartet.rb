@@ -1,10 +1,10 @@
 module Rules
-  class SourceMaterialCornerIsekaiQuartetRule < SourceMaterialCornerRule
+  class SourceCornerCreationRuleIsekaiQuartet < SourceCornerCreationRule
     FLAIR_NAME_REGEX = /Episode/i # not present in original rule
     DATE_GATE = Time.parse(ENV["DATE_GATE"]) # temp
 
     def name
-      "Source Material Corner Rule (Isekai Quartet)"
+      "Source Corner Creation Rule (Isekai Quartet)"
     end
 
     def on_upsert

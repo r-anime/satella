@@ -1,10 +1,10 @@
 module Rules
-  class SourceMaterialCornerRule < BaseRule
+  class SourceCornerCreationRule < BaseRule
     FLAIR_NAME_REGEX = /Episode/i # not present in original rule
     DATE_GATE = Time.parse(ENV["DATE_GATE"]) # temp
 
     def name
-      "Source Material Corner Rule"
+      "Source Corner Creation Rule"
     end
 
     def on_upsert
