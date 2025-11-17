@@ -51,8 +51,8 @@ jobs:
             type=gha
             type=registry,ref=ghcr.io/${{ github.repository }}:buildcache
           cache-to: |
-            type=gha,mode=max
-            type=registry,ref=ghcr.io/${{ github.repository }}:buildcache,mode=max
+            type=gha,mode=max,compression=zstd
+            type=registry,ref=ghcr.io/${{ github.repository }}:buildcache,mode=max,compression=zstd
           build-args: |
             GIT_COMMIT_HASH=${{ github.sha }}
             GIT_REPO_URL=https://github.com/${{ github.repository }}
