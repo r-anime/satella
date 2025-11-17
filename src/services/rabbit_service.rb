@@ -26,6 +26,7 @@ class RabbitService
   def listen!
     @connection.start
     channel = @connection.create_channel
+    channel.prefetch(ENV.fetch("SATELLA_RABBITMQ_PREFETCH", "100").to_i)
     retry_exchange = channel.direct(@retry_exchange_name, durable: true)
     $logger.info "Connected to #{@retry_exchange_name}"
 
