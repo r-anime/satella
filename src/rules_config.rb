@@ -32,7 +32,7 @@ class RulesConfig
 
     new_configs = {}
     config_indexes = {}
-    automod_configs.each_with_index do |automod_config, i|
+    automod_configs.compact.each_with_index do |automod_config, i|
       next unless automod_config['id']&.start_with?(ID_PREFIX)
       config_name = automod_config['id'].delete_prefix(ID_PREFIX)
       new_configs[config_name] = automod_config
