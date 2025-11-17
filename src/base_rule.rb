@@ -79,7 +79,7 @@ class BaseRule
   # @param rabbit_message The rabbitmq message with the reddit and db object in json form
   # @return true if the other checker should be invoked
   def base_static_post_check?(rabbit_message)
-    @check_mods || !rules_config.mods.include?(rabbit_message["author"]["name"])
+    @check_mods || !rules_config.mods.include?(rabbit_message[:reddit][:author][:name])
   end
 
   # @overridable false
