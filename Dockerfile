@@ -19,7 +19,11 @@ RUN bundle install
 
 FROM ruby:3.4.7-alpine
 
+ENV APP_HOME=/app
+
 RUN apk add --no-cache postgresql-libs bash && rm -rf /var/cache/apk/*
+
+WORKDIR $APP_HOME
 
 # copy over deps
 COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
