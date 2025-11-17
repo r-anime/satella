@@ -2,8 +2,6 @@ require 'time'
 
 module Rules
   class SourceCornerReportingRule < BaseRule
-    DATE_GATE = Time.parse(ENV["DATE_GATE"]) # temp
-
     def name
       "Source Corner Reporting Rule"
     end
@@ -19,8 +17,6 @@ module Rules
     def static_comment_check?(rabbit_message)
       # ignore bot messages
       ENV["REDDIT_USERNAME"] != rabbit_message[:reddit][:author][:name] &&
-        # ignore old top level comments (they're already handled)
-        (DATE_GATE <= Time.at(rabbit_message[:reddit][:created_utc]) || rabbit_message[:reddit][:parent_id].start_with?('t1_')) &&
         @authors_regex.match?(rabbit_message[:reddit][:link_author])
     end
 

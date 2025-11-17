@@ -18,7 +18,7 @@ FileUtils.mkdir_p(File.dirname(ENV["LOG_FILE_SATELLA_DB_PATH"]))
 file_logger = Logger.new(
   ENV["LOG_FILE_SATELLA_DB_PATH"],
   ENV.fetch('LOG_FILE_NUMBER_FILES', "3").to_i,
-  ENV.fetch('LOG_FILE_MAX_MEBIBYTES', "1").to_i,
+  ENV.fetch('LOG_FILE_MAX_MEBIBYTES', "1").to_i * 1024 * 1024,
   level: Logger.const_get(ENV.fetch('LOG_LEVEL_FILE', 'INFO'))
 )
 
