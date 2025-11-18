@@ -21,8 +21,8 @@ module Rules
     end
 
     def comment_check(rabbit_message)
-      match_data = @body_regex.match(rabbit_message[:reddit][:body])
-      return RuleResult::NoAction.new(rule_module: self, rabbit_message:) unless match_data
+      match_data = rabbit_message[:reddit][:body].scan(@body_regex).uniq
+      return RuleResult::NoAction.new(rule_module: self, rabbit_message:) if match_data.empty?
 
       is_right_flair = Post.exists?(id: rabbit_message[:db][:post_id], flair_id: @flair_ids)
       return RuleResult::NoAction.new(rule_module: self, rabbit_message:) unless is_right_flair
@@ -35,10 +35,8 @@ module Rules
 
     def execute_comment(custom_action)
       super(custom_action)
-      reddit.report(
-        custom_action.rabbit_message[:reddit][:name],
-        @report_template.sub('{{match}}', custom_action.args[:match_data][1])
-      )
+      report_matches = custom_action.args[:match_data].map { |match| "[#{match[0]}]" }.join(" ")
+      reddit.report(custom_action.rabbit_message[:reddit][:name], @report_template.sub('[{{match}}]', report_matches))
     end
   end
 end
