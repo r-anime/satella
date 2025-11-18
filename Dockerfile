@@ -1,6 +1,7 @@
 FROM ruby:3.4.7-alpine AS builder
 
 ENV APP_HOME=/app
+WORKDIR $APP_HOME
 
 RUN apk add --no-cache \
       build-base \
@@ -9,21 +10,18 @@ RUN apk add --no-cache \
       git \
     && rm -rf /var/cache/apk/*
 
-WORKDIR $APP_HOME
-
 RUN gem update --system
 
 COPY Gemfile Gemfile.lock ./
 
-RUN bundle install
+RUN bundle config set without 'development test' && bundle install
 
 FROM ruby:3.4.7-alpine AS runtime
 
 ENV APP_HOME=/app
+WORKDIR $APP_HOME
 
 RUN apk add --no-cache postgresql-libs bash && rm -rf /var/cache/apk/*
-
-WORKDIR $APP_HOME
 
 # copy over deps
 COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
