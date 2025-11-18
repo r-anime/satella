@@ -70,7 +70,7 @@ GEM
       ffi-compiler (~> 1.0)
       rake (~> 13.0)
     logger (1.7.0)
-    minitest (5.26.0)
+    minitest (5.26.1)
     openssl (3.3.2)
     pg (1.6.2)
     pg (1.6.2-aarch64-linux)
@@ -90,7 +90,7 @@ GEM
     timeout (0.4.4)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    uri (1.1.0)
+    uri (1.1.1)
     yaml (0.4.0)
 
 PLATFORMS
