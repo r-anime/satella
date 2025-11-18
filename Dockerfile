@@ -17,7 +17,7 @@ COPY Gemfile Gemfile.lock ./
 
 RUN bundle install
 
-FROM ruby:3.4.7-alpine
+FROM ruby:3.4.7-alpine AS runtime
 
 ENV APP_HOME=/app
 
