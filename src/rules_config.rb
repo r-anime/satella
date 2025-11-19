@@ -66,6 +66,14 @@ class RulesConfig
     nil
   end
 
+  def removal_header(fullname)
+    "Sorry, your submission has been removed.\n\n"
+  end
+
+  def bot_footer
+    "\n\n*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/#{ENV["SUBREDDIT_NAME_TO_ACT_ON"]}) if you have any questions or concerns.*"
+  end
+
   def config(name)
     @configs[name]
   end
