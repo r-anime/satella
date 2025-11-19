@@ -7,6 +7,7 @@ class RedditService
   attr_reader :redd
   extend Forwardable
   def_delegators :client, :request, :get, :post, :put, :patch, :delete
+  attr_accessor :rules_config
 
   def initialize(user_agent:, client_id:, secret:, username:, password:)
     @redd = Redd.it(user_agent:, client_id:, secret:, username:, password:)
@@ -26,7 +27,10 @@ class RedditService
   end
 
   # TODO integrate with removal reasons template
-  def remove_with_reason(fullname, reason, sticky: false, how: 'yes', spam: false)
+  def remove_with_reason(fullname, reason, sticky: false, how: 'yes', spam: false,
+                         header: @rules_config.removal_header(fullname), footer: @rules_config.bot_footer)
+    reason = header + reason if header
+    reason = reason + footer if footer
     remove(fullname)
     comment_json = reply_comment(fullname, reason)
     reply_id = comment_json[:json][:data][:things][0][:data][:name]

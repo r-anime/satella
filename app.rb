@@ -17,6 +17,7 @@ def main
   )
 
   rules_config = RulesConfig.new(reddit:)
+  reddit.rules_config = rules_config
   Rules.rule_modules.each do |rule|
     rule.new(reddit:, rules_config:)
   end
