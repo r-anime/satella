@@ -4,14 +4,18 @@ require_relative './models/user'
 class RulesConfig
   ID_PREFIX = "AnimeMod 2.0: "
 
-  attr_accessor :reddit
+  attr_accessor :reddit, :placeholder_service
   attr_reader :rule_modules, :configs, :active_rule_modules, :mods
+  attr_accessor :removal_header_template, :removal_footer_template
 
-  def initialize(reddit:)
+  def initialize(reddit:, placeholder_service:)
     @reddit = reddit
+    @placeholder_service = placeholder_service
     @rule_modules = []
     @configs = {}
     @mods = Set.new
+    @removal_header_template = "Sorry, your {{kind}} has been removed."
+    @removal_footer_template = "*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/#{ENV["SUBREDDIT_NAME_TO_ACT_ON"]}) if you have any questions or concerns.*"
   end
 
   def add_rule_module(rule_module)
@@ -66,12 +70,24 @@ class RulesConfig
     nil
   end
 
-  def removal_header(fullname)
-    "Sorry, your submission has been removed.\n\n"
+  def removal_header_template=(new_header_template)
+    @removal_header_template = placeholder_service.replace_template_placeholders(
+      new_header_template.strip.concat("\n\n")
+    )
   end
 
-  def bot_footer
-    "\n\n*I am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](/message/compose/?to=/r/#{ENV["SUBREDDIT_NAME_TO_ACT_ON"]}) if you have any questions or concerns.*"
+  def removal_footer_template=(new_footer_template)
+    @removal_footer_template = placeholder_service.replace_template_placeholders(
+      new_footer_template.strip.prepend("\n\n---\n\n")
+    )
+  end
+
+  def removal_header(fullname)
+    placeholder_service.replace_placeholders(@removal_header_template, fullname:)
+  end
+
+  def removal_footer(fullname)
+    placeholder_service.replace_placeholders(@removal_footer_template, fullname:)
   end
 
   def config(name)
