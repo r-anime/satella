@@ -40,7 +40,7 @@ class RabbitService
     $logger.info "✅ Listening on #{@queues.values.join(', ')}"
     sleep
   rescue Interrupt
-    $logger.info "\nShutting down..."
+    $logger.info "Shutting down..."
     @connection.close if @connection.open?
   end
 
