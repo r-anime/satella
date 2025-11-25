@@ -1,6 +1,7 @@
 require 'dotenv/load'
 
 require_relative './src/logger'
+require_relative './src/services/placeholder_service'
 require_relative './src/services/rabbit_service'
 require_relative './src/services/reddit_service'
 require_relative './src/db'
@@ -16,9 +17,11 @@ def main
     password: ENV['REDDIT_USER_PASSWORD']
   )
 
-  rules_config = RulesConfig.new(reddit:)
+  placeholder_service = PlaceholderService.new
+  rules_config = RulesConfig.new(reddit:, placeholder_service:)
+  reddit.rules_config = rules_config
   Rules.rule_modules.each do |rule|
-    rule.new(reddit:, rules_config:)
+    rule.new(reddit:, rules_config:, placeholder_service:)
   end
   rules_config.start_up!
 

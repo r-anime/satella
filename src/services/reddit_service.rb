@@ -7,6 +7,7 @@ class RedditService
   attr_reader :redd
   extend Forwardable
   def_delegators :client, :request, :get, :post, :put, :patch, :delete
+  attr_accessor :rules_config
 
   def initialize(user_agent:, client_id:, secret:, username:, password:)
     @redd = Redd.it(user_agent:, client_id:, secret:, username:, password:)
@@ -17,19 +18,16 @@ class RedditService
     YAML.load_stream(get("/r/#{subreddit}/wiki/config/automoderator").body[:data][:content_md])
   end
 
-  def report(fullname, reason)
-    post("/api/report", {
-      api_type: 'json',
-      thing_id: fullname,
-      reason: reason.truncate(MAX_REPORT_REASON_LENGTH, omission: '…')
-    }).body
-  end
+  # combined actions
 
-  # TODO integrate with removal reasons template
-  def remove_with_reason(fullname, reason, sticky: false, how: 'yes', spam: false)
+  def remove_with_reason(fullname, reason, sticky: false, how: 'yes', spam: false, lock: true,
+                         header: @rules_config.removal_header(fullname), footer: @rules_config.removal_footer(fullname))
+    reason = header + reason if header
+    reason = reason + footer if footer
     remove(fullname)
     comment_json = reply_comment(fullname, reason)
     reply_id = comment_json[:json][:data][:things][0][:data][:name]
+    lock(reply_id) if lock
     distinguish(reply_id, sticky:)
   end
 
@@ -37,6 +35,24 @@ class RedditService
     comment_json = reply_comment(fullname, comment_text)
     reply_id = comment_json[:json][:data][:things][0][:data][:name]
     distinguish(reply_id, sticky:)
+  end
+
+  # direct api
+
+  def distinguish(fullname, sticky: false, how: 'yes')
+    post("/api/distinguish", {
+      api_type: 'json',
+      id: fullname,
+      how:,
+      sticky:,
+    }).body
+  end
+
+  def lock(fullname)
+    post("/api/lock", {
+      api_type: 'json',
+      id: fullname
+    }).body
   end
 
   def remove(fullname, spam: false)
@@ -55,12 +71,11 @@ class RedditService
     }).body
   end
 
-  def distinguish(fullname, sticky: false, how: 'yes')
-    post("/api/distinguish", {
+  def report(fullname, reason)
+    post("/api/report", {
       api_type: 'json',
-      id: fullname,
-      how:,
-      sticky:,
+      thing_id: fullname,
+      reason: reason.truncate(MAX_REPORT_REASON_LENGTH, omission: '…')
     }).body
   end
 
