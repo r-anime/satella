@@ -1,6 +1,15 @@
 require 'dotenv/load'
 
 require_relative './src/logger'
+$logger.info "Starting up Satella at: #{ENV["GIT_REPO_URL"]}/tree/#{ENV["GIT_COMMIT_HASH"]}"
+
+Signal.trap("TERM") do
+  Thread.new do
+    $logger.info "Shutting down Satella"
+  end.join
+  exit
+end
+
 require_relative './src/services/placeholder_service'
 require_relative './src/services/rabbit_service'
 require_relative './src/services/reddit_service'
