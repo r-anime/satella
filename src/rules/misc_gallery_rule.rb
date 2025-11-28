@@ -12,7 +12,7 @@ module Rules
     end
 
     def static_post_check?(rabbit_message)
-      rabbit_message[:reddit][:media_metadata] && # check that this is even a gallery in the first place
+      rabbit_message[:reddit][:is_gallery] && # check that this is even a gallery in the first place
         @flair_ids.include?(rabbit_message[:reddit][:link_flair_template_id]) &&
         rabbit_message[:reddit][:media_metadata].size < @number_of_required_images
     end
