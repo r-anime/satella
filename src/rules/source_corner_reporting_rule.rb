@@ -21,7 +21,7 @@ module Rules
     end
 
     def comment_check(rabbit_message)
-      match_data = rabbit_message[:reddit][:body].scan(@body_regex).uniq
+      match_data = rabbit_message[:reddit][:body].scan(@body_regex).uniq { |match| match[0].downcase.strip }
       return RuleResult::NoAction.new(rule_module: self, rabbit_message:) if match_data.empty?
 
       is_right_flair = Post.exists?(id: rabbit_message[:db][:post_id], flair_id: @flair_ids)
