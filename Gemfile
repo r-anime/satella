@@ -15,4 +15,4 @@ gem "activerecord", "~> 8.0"
 gem "activesupport", "~> 8.0"
 gem "pg", "~> 1.6"
 
-gem "dotenv", "~> 3.1"
+gem "dotenv", "~> 3.2"
