@@ -4,7 +4,7 @@ source "https://rubygems.org"
 ruby "~> 3.4.7"
 git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
-gem "json", "~> 2.17"
+gem "json", "~> 2.18"
 gem "openssl", "~> 3.3"
 gem "yaml", "~> 0.4.0"
 
