@@ -1,7 +1,5 @@
 module Rules
   class SourceCornerCreationRule < BaseRule
-    FLAIR_NAME_REGEX = /Episode/i # not present in original rule
-
     def name
       "Source Corner Creation Rule"
     end
@@ -15,8 +13,7 @@ module Rules
     end
 
     def static_post_check?(rabbit_message)
-      FLAIR_NAME_REGEX.match?(rabbit_message[:reddit][:link_flair_text]) &&
-        @authors_regex.match?(rabbit_message[:reddit][:author][:name]) &&
+      @authors_regex.match?(rabbit_message[:reddit][:author][:name]) &&
         @body_regex.match?(rabbit_message[:reddit][:selftext])
     end
 
