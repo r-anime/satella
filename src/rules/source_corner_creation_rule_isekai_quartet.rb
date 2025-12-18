@@ -1,7 +1,5 @@
 module Rules
   class SourceCornerCreationRuleIsekaiQuartet < SourceCornerCreationRule
-    FLAIR_NAME_REGEX = /Episode/i # not present in original rule
-
     def name
       "Source Corner Creation Rule (Isekai Quartet)"
     end
@@ -12,8 +10,7 @@ module Rules
     end
 
     def static_post_check?(rabbit_message)
-      FLAIR_NAME_REGEX.match?(rabbit_message[:reddit][:link_flair_text]) &&
-        @authors_regex.match?(rabbit_message[:reddit][:author][:name]) &&
+      @authors_regex.match?(rabbit_message[:reddit][:author][:name]) &&
         @title_regex.match?(rabbit_message[:reddit][:title])
     end
   end
