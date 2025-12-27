@@ -5,6 +5,7 @@ WORKDIR $APP_HOME
 
 RUN apk add --no-cache \
       build-base \
+      libffi-dev \
       postgresql-dev \
       tzdata \
       git \
