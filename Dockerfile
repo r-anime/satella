@@ -1,10 +1,11 @@
-FROM ruby:3.4.8-alpine AS builder
+FROM ruby:4.0.0-alpine AS builder
 
 ENV APP_HOME=/app
 WORKDIR $APP_HOME
 
 RUN apk add --no-cache \
       build-base \
+      libffi-dev \
       postgresql-dev \
       tzdata \
       git \
@@ -16,7 +17,7 @@ COPY Gemfile Gemfile.lock ./
 
 RUN bundle config set without 'development test' && bundle install
 
-FROM ruby:3.4.8-alpine AS runtime
+FROM ruby:4.0.0-alpine AS runtime
 
 ENV APP_HOME=/app
 WORKDIR $APP_HOME
