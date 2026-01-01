@@ -79,6 +79,26 @@ class RedditService
     }).body
   end
 
+  # Mod notes
+  def create_mod_note(username, label, message, subreddit: ENV['SUBREDDIT_NAME_TO_ACT_ON'], reddit_id: nil)
+    post("/api/mod/notes", {
+      user: username,
+      note: message,
+      label:,
+      reddit_id:,
+      subreddit:,
+    }).body
+  end
+
+  def fetch_mod_notes(username, subreddit: ENV['SUBREDDIT_NAME_TO_ACT_ON'], limit: 100, filter: 'all')
+    get("/api/mod/notes", {
+      user: username,
+      subreddit:,
+      limit:,
+      filter:,
+    }).body
+  end
+
   private
 
   def client

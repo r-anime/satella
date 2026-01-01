@@ -86,6 +86,20 @@ Overall, you should only need to care about the rule module you're implementing 
 
 Contact u/baseballlover723 on discord (r/anime internal use) or by reddit chat for any further questions or assistance.
 
+# Random Scripts
+
+I put a script here because it was convenient to hijack the reddit service already implemented here. They probably shouldn't live here if they get expanded too much.
+
+## Transfer Mod Notes
+
+This is for people who make new alts, and we want to transfer their mod note history to their new account. This will prompt and requires confirmation (by typing `y` and then hitting enter in the console) before actually persisting mod notes.
+
+Locally: `bundle exec ruby transfer_mod_notes.rb old_username new_username`
+
+Local docker compose: `docker compose run --rm --build transfer_mod_notes old_username new_username`
+
+Modbot server: `cd /srv; docker compose run --rm --no-deps satella old_username new_username`
+
 ![Satella](profile_pic.png)
 
 aishiteru aishiteru aishiteru aishiteru aishiteru aishiteru aishiteru aishiteru aishiteru aishiteru aishiteru aishiteru aishiteru aishiteru aishiteru 

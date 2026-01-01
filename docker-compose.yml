@@ -5,3 +5,7 @@ services:
   satella:
     build: .
     env_file: .env
+  transfer_mod_notes:
+    build: .
+    env_file: .env
+    command: 'bundle exec ruby transfer_mod_notes.rb old_username new_username'
