@@ -11,8 +11,8 @@ module Rules
 
     def on_upsert
       @authors_regex = /#{Array(config["author"]["name"]).map { |a| Regexp.escape(a) }.join("|")}/i
-      start_time = Time.find_zone("UTC").parse(config["body"]["start_date"]).to_time if config["body"]["start_date"]
-      expire_time = Time.find_zone("UTC").parse(config["body"]["expire_date"]).to_time if config["body"]["expire_date"]
+      start_time = Time.parse(config["body"]["start_date"]) if config["body"]["start_date"]
+      expire_time = Time.parse(config["body"]["expire_date"]) if config["body"]["expire_date"]
       @time_range = (start_time..expire_time)
       @temp_sort = config["body"]["sort"]
       @duration = config["body"]["duration"].hours
