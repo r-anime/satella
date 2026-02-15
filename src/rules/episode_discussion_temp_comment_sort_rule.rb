@@ -37,6 +37,7 @@ module Rules
       @cache_reset_processed[post_id] = false
       @cache_reset_time[post_id] = Time.at(custom_action.rabbit_message[:reddit][:created_utc]).utc + @duration
       reddit.set_default_comment_sort(custom_action.rabbit_message[:reddit][:name], @temp_sort)
+      $logger.info "Set #{@temp_sort} for #{@duration} (#{@cache_reset_time[post_id]}) on post #{custom_action.rabbit_message[:reddit][:id]}: #{custom_action.rabbit_message[:reddit][:title]}"
     end
 
     # TODO remove entire comment processing and replace with proper delay
@@ -80,6 +81,7 @@ module Rules
       post_id = custom_action.rabbit_message[:db][:post_id]
       @cache_reset_processed[post_id] = true
       reddit.set_default_comment_sort("t3_#{post_id.to_s(36)}", @returning_sort)
+      $logger.info "Set #{@returning_sort} (ending #{@temp_sort}) on post #{post_id.to_s(36)}: #{custom_action.rabbit_message[:reddit][:link_title]}"
     end
   end
 end
