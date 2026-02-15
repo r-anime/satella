@@ -80,7 +80,6 @@ class RedditService
   end
 
   def set_default_comment_sort(fullname, sort)
-    puts "setting default comment sort for #{fullname} => #{sort}" # debug
     post("/api/set_suggested_sort", {
       api_type: 'json',
       id: fullname,
