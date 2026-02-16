@@ -79,6 +79,15 @@ class RedditService
     }).body
   end
 
+  def set_default_comment_sort(fullname, sort)
+    post("/api/set_suggested_sort", {
+      api_type: 'json',
+      id: fullname,
+      sort: sort
+    }).body
+
+  end
+
   # Mod notes
   def create_mod_note(username, label, message, subreddit: ENV['SUBREDDIT_NAME_TO_ACT_ON'], reddit_id: nil)
     post("/api/mod/notes", {
