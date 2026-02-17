@@ -16,12 +16,19 @@ module Rules
       @temp_sort = config["body"]["sort"]
       @duration = config["body"]["duration"].hours
       @returning_sort = config["body"]["returning_sort"]
+      $logger.debug { "#{self.class.name}: Time range: #{@time_range}" }
 
       @cache_reset_processed = Hash.new(false) # TODO remove with proper delay
       @cache_reset_time = {} # TODO remove with proper delay
     end
 
     def static_post_check?(rabbit_message)
+      if rabbit_message[:reddit][:title].downcase.end_with?('discussion')
+        $logger.debug { "#{self.class.name}: rabbitmq message: #{JSON.generate(rabbit_message)}" }
+        $logger.debug { "#{self.class.name}: cache check: #{!@cache_reset_processed[rabbit_message[:db][:id]]}" }
+        $logger.debug { "#{self.class.name}: time range check: #{@time_range.include?(Time.at(rabbit_message[:reddit][:created_utc]).utc)}: post time: #{Time.at(rabbit_message[:reddit][:created_utc]).utc}" }
+        $logger.debug { "#{self.class.name}: author check: #{@authors_regex.match?(rabbit_message[:reddit][:author][:name])}, author: #{rabbit_message[:reddit][:author][:name]}" }
+      end
       !@cache_reset_processed[rabbit_message[:db][:id]] &&
         @time_range.include?(Time.at(rabbit_message[:reddit][:created_utc]).utc) &&
         @authors_regex.match?(rabbit_message[:reddit][:author][:name])
