@@ -11,7 +11,7 @@ class RedditService
 
   def initialize(user_agent:, client_id:, secret:, username:, password:)
     @redd = Redd.it(user_agent:, client_id:, secret:, username:, password:)
-    $logger.info "Successfully authed to reddit"
+    $logger.info { "Successfully authed to reddit" }
   end
 
   def fetch_automod_rules(subreddit)

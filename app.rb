@@ -1,11 +1,11 @@
 require 'dotenv/load'
 
 require_relative './src/logger'
-$logger.info "Starting up Satella at: #{ENV["GIT_REPO_URL"]}/tree/#{ENV["GIT_COMMIT_HASH"]}"
+$logger.info { "Starting up Satella at: #{ENV["GIT_REPO_URL"]}/tree/#{ENV["GIT_COMMIT_HASH"]}" }
 
 Signal.trap("TERM") do
   Thread.new do
-    $logger.info "Shutting down Satella"
+    $logger.info { "Shutting down Satella" }
   end.join
   exit
 end
@@ -34,7 +34,7 @@ def main
   end
   rules_config.start_up!
 
-  $logger.info "active rules: #{rules_config.active_rule_modules.map { |rm| "#{rm.name}: #{rm.priority}" }}"
+  $logger.info { "active rules: #{rules_config.active_rule_modules.map { |rm| "#{rm.name}: #{rm.priority}" }}" }
 
   rabbit = RabbitService.new(
     host: ENV['RABBITMQ_HOST'],
@@ -66,10 +66,10 @@ def get_queues(active_rule_modules)
 end
 
 def handle_post(active_rule_modules, message)
-  if $logger.level <= Logger::DEBUG
-    $logger.debug "[posts] Received: #{message}"
+  if $logger.level <= Logger::TRACE
+    $logger.trace { "[posts] Received: #{JSON.generate(message)}" }
   else
-    $logger.info "[posts] Received: #{message[:reddit][:id]}"
+    $logger.info { "[posts] Received: #{message[:reddit][:id]}" }
   end
 
   results = active_rule_modules
@@ -82,10 +82,10 @@ def handle_post(active_rule_modules, message)
 end
 
 def handle_comment(active_rule_modules, message)
-  if $logger.level <= Logger::DEBUG
-    $logger.debug "[comments] Received: #{message}"
+  if $logger.level <= Logger::TRACE
+    $logger.trace { "[comments] Received: #{JSON.generate(message)}" }
   else
-    $logger.info "[comments] Received: #{message[:reddit][:id]}"
+    $logger.info { "[comments] Received: #{message[:reddit][:id]}" }
   end
 
   results = active_rule_modules
@@ -98,10 +98,10 @@ def handle_comment(active_rule_modules, message)
 end
 
 def handle_mod_action(active_rule_modules, message)
-  if $logger.level <= Logger::DEBUG
-    $logger.debug "[mod_actions] Received: #{message}"
+  if $logger.level <= Logger::TRACE
+    $logger.trace { "[mod_actions] Received: #{JSON.generate(message)}" }
   else
-    $logger.info "[mod_actions] Received: #{message[:reddit][:id]}"
+    $logger.info { "[mod_actions] Received: #{message[:reddit][:id]}" }
   end
 
   results = active_rule_modules

@@ -31,8 +31,8 @@ end
 
 begin
   ActiveRecord::Base.connection.execute("SELECT 1")
-  $logger.info "Successfully connected to postgres"
+  $logger.info { "Successfully connected to postgres" }
 rescue => e
-  $logger.error "Database connection failed: #{e.message}"
+  $logger.error { "Database connection failed: #{e.message}" }
   raise e
 end
