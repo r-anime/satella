@@ -32,7 +32,7 @@ class RulesConfig
   # @return nil
   def fetch_config!
     automod_configs = @reddit.fetch_automod_rules(ENV['SUBREDDIT_NAME_TO_ACT_ON'])
-    $logger.debug 'Fetched automod rules'
+    $logger.debug { "Fetched automod rules" }
 
     new_configs = {}
     config_indexes = {}
@@ -55,7 +55,7 @@ class RulesConfig
     end
 
     @active_rule_modules = new_active_rule_modules
-    $logger.info "Successfully updated rules config, active rules: #{@active_rule_modules.map(&:to_short_s)}"
+    $logger.info { "Successfully updated rules config, active rules: #{@active_rule_modules.map(&:to_short_s)}" }
 
     nil
   end
@@ -65,7 +65,7 @@ class RulesConfig
   # @return nil
   def fetch_mods!
     @mods = User.where(moderator: true).pluck(:username).to_set
-    $logger.info "Successfully updated mods: #{@mods}"
+    $logger.info { "Successfully updated mods: #{@mods}" }
 
     nil
   end

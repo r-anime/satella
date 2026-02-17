@@ -28,7 +28,7 @@ class RabbitService
     channel = @connection.create_channel
     channel.prefetch(ENV.fetch("SATELLA_RABBITMQ_PREFETCH", "100").to_i)
     retry_exchange = channel.direct(@retry_exchange_name, durable: true)
-    $logger.info "Connected to #{@retry_exchange_name}"
+    $logger.info { "Connected to #{@retry_exchange_name}" }
 
     @queues.each do |queue_key, value|
       queue_name = value[:queue_name]
@@ -37,10 +37,10 @@ class RabbitService
       setup_listener(channel, queue_name, retry_exchange, handler)
     end
 
-    $logger.info "✅ Listening on #{@queues.values.join(', ')}"
+    $logger.info { "✅ Listening on #{@queues.values.join(', ')}" }
     sleep
   rescue Interrupt
-    $logger.info "Shutting down..."
+    $logger.info { "Shutting down..." }
     @connection.close if @connection.open?
   end
 
@@ -56,8 +56,8 @@ class RabbitService
     rescue => e
       attempt = properties&.headers&.[](ATTEMPT_HEADER) || 1
       if attempt < MAX_ATTEMPTS
-        $logger.warn "[#{queue_name}] Handler error (#{attempt}/#{MAX_ATTEMPTS} retrying): #{e.class}: #{e.message}"
-        $logger.warn e.backtrace.join("\n")
+        $logger.warn { "[#{queue_name}] Handler error (#{attempt}/#{MAX_ATTEMPTS} retrying): #{e.class}: #{e.message}" }
+        $logger.warn { e.backtrace.join("\n") }
         retry_exchange.publish(
           body,
           headers: {ATTEMPT_HEADER => attempt + 1},
@@ -67,8 +67,8 @@ class RabbitService
         )
         delivery_info.channel.ack(delivery_info.delivery_tag)
       else
-        $logger.warn "[#{queue_name}] Handler error (#{attempt}/#{MAX_ATTEMPTS} dead lettering): #{e.class}: #{e.message}"
-        $logger.warn e.backtrace.join("\n")
+        $logger.warn { "[#{queue_name}] Handler error (#{attempt}/#{MAX_ATTEMPTS} dead lettering): #{e.class}: #{e.message}" }
+        $logger.warn { e.backtrace.join("\n") }
         delivery_info.channel.nack(delivery_info.delivery_tag, false, false)
       end
     end

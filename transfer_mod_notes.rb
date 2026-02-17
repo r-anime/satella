@@ -12,7 +12,7 @@ def main(old_username, new_username)
     password: ENV['REDDIT_USER_PASSWORD']
   )
 
-  $logger.info "Transferring mod notes from #{old_username} -> #{new_username}"
+  $logger.info { "Transferring mod notes from #{old_username} -> #{new_username}" }
 
   old_notes = reddit.fetch_mod_notes(old_username, subreddit: "anime", filter: 'NOTE')
 
@@ -25,26 +25,26 @@ def main(old_username, new_username)
   end.reverse
 
   to_transfer.each do |new_note|
-    $logger.info new_note
+    $logger.info { new_note }
   end
 
-  $logger.info "Transfer mod notes from #{old_username} -> #{new_username}? (y/n): "
+  $logger.info { "Transfer mod notes from #{old_username} -> #{new_username}? (y/n): " }
   answer = STDIN.gets&.chomp&.downcase
 
   if answer != "y"
-    $logger.info("Confirmation denied for mod note transfer from #{old_username} -> #{new_username}")
+    $logger.info { "Confirmation denied for mod note transfer from #{old_username} -> #{new_username}" }
     exit
   end
 
-  $logger.info "Confirmation received. Transferring mod notes from #{old_username} -> #{new_username}"
+  $logger.info { "Confirmation received. Transferring mod notes from #{old_username} -> #{new_username}" }
 
   to_transfer.each do |new_note|
-    $logger.info "Transferring: #{new_note}"
+    $logger.info { "Transferring: #{new_note}" }
     reddit.create_mod_note(new_username, new_note[:label], new_note[:message], subreddit: "anime", reddit_id: new_note[:reddit_id])
     sleep 10
   end
 
-  $logger.info "Finished transferring mod notes from #{old_username} -> #{new_username}"
+  $logger.info { "Finished transferring mod notes from #{old_username} -> #{new_username}" }
 end
 
 main *ARGV
