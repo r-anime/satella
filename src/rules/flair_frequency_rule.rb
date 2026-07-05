@@ -35,12 +35,14 @@ module Rules
         )
         .where("lower(author) = ?", rabbit_message[:reddit][:author][:name].downcase)
         .where.not(id36: rabbit_message[:reddit][:id])
-        .where(
-          flair_frequency_exemptions: {id: nil}
-        ).or(Post
-               .left_joins(:flair_frequency_exemption)
-               .where(flair_frequency_exemptions: {is_exempt: false})
-      )
+        .and(
+          Post
+            .left_joins(:flair_frequency_exemption)
+            .where(flair_frequency_exemptions: {id: nil}
+            ).or(
+            Post.where(flair_frequency_exemptions: {is_exempt: false}
+            )
+          ))
         .order(created_time: :asc)
         .load
 
