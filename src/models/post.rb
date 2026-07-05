@@ -4,4 +4,5 @@ class Post < ActiveRecord::Base
   belongs_to :author, class_name: 'User', optional: true
   has_many :comments, dependent: :destroy
   has_many :mod_actions, foreign_key: "target_post_id", dependent: :destroy
+  has_one :flair_frequency_exemption, dependent: :destroy
 end
