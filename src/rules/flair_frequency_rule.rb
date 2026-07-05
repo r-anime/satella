@@ -3,6 +3,8 @@ require "active_support/core_ext/numeric/time"
 
 module Rules
   class FlairFrequencyRule < BaseRule
+    DISCORD_IGNORE_COLOR = 0x808080
+    DISCORD_UNIGNORE_COLOR = 0xFFFFFF
     SECONDS_IN_A_DAY = 60 * 60 * 24
 
     def name
@@ -10,7 +12,7 @@ module Rules
     end
 
     def on_upsert
-      @flair_configs = config["body"].flat_map do |flair_config|
+      @flair_configs = config["body"]["flair_configs"].flat_map do |flair_config|
         Array(flair_config["flairs"]).map do |flair|
           [flair, flair_config.symbolize_keys.merge(flairs: Array(flair_config["flairs"]))]
         end
@@ -18,6 +20,8 @@ module Rules
         [flair, c.merge(human_flairs: c[:flairs].join("/"))]
       end.to_h
       @removal_comment_template = @placeholder_service.replace_template_placeholders(config["comment"])
+      @ignore_command = config["body"]["exemption_comment_commands"]["ignore_command"].downcase
+      @unignore_command = config["body"]["exemption_comment_commands"]["unignore_command"].downcase
     end
 
     def static_post_check?(rabbit_message)
@@ -72,7 +76,41 @@ module Rules
       reddit.remove_with_reason(custom_action.rabbit_message[:reddit][:name], custom_action.args[:removal_text])
     end
 
-    # TODO comments, handle exemptions handling
+    def static_comment_check?(rabbit_message)
+      comment_body = rabbit_message[:reddit][:body].strip.downcase
+      rules_config.mods.include?(rabbit_message[:reddit][:author][:name]) &&
+        (comment_body == @ignore_command || comment_body == @unignore_command)
+    end
+
+    def comment_check(rabbit_message)
+      post = Post.find(rabbit_message[:db][:post_id])
+      flair_config = @flair_configs[post.flair_text]
+      return RuleResult::NoAction.new(rule_module: self, rabbit_message:) unless flair_config
+
+      comment_body = rabbit_message[:reddit][:body].strip.downcase
+      RuleResult::CustomAction.new(rule_module: self, rabbit_message:, args: {post:, is_exempt: comment_body == @ignore_command})
+    end
+
+    def execute_comment(custom_action)
+      super(custom_action)
+      post = custom_action.args[:post]
+      is_exempt = custom_action.args[:is_exempt]
+
+      FlairFrequencyExemption.upsert({post_id: post.id, is_exempt:}, unique_by: :post_id)
+      discord.post_mod_log_webhook(
+        [
+          {
+            title: post.title.truncate(256),
+            url: "https://redd.it/#{post.id36}",
+            author: {name: "/u/#{post.author}"},
+            description: "/u/#{custom_action.rabbit_message[:reddit][:author][:name]} #{is_exempt ? "ignored" : "unignored"} this post for the flair frequency rule module",
+            timestamp: Time.at(custom_action.rabbit_message[:reddit][:created_utc]).iso8601,
+            color: is_exempt ? DISCORD_IGNORE_COLOR : DISCORD_UNIGNORE_COLOR,
+          }
+        ]
+      )
+      reddit.remove(custom_action.rabbit_message[:reddit][:name])
+    end
 
     private
 
