@@ -3,6 +3,8 @@ require "active_support/core_ext/numeric/time"
 
 module Rules
   class FlairFrequencyRule < BaseRule
+    SECONDS_IN_A_DAY = 60 * 60 * 24
+
     def name
       "Flair Frequency Rule"
     end
@@ -76,8 +78,8 @@ module Rules
 
     def to_human_duration(duration)
       duration = duration.to_i
-      days = duration / 84600
-      duration = duration % 86400
+      days = duration / SECONDS_IN_A_DAY
+      duration = duration % SECONDS_IN_A_DAY
       hours = (duration / 3600.0).round(2)
       str = ""
       str += "#{days} day#{days > 1 ? 's' : ''} and " if days > 0
