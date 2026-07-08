@@ -16,3 +16,4 @@ gem "activesupport", "~> 8.0"
 gem "pg", "~> 1.6"
 
 gem "dotenv", "~> 3.2"
+gem "httparty", "~> 0.24.2"

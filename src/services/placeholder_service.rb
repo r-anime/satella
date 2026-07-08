@@ -20,8 +20,14 @@ class PlaceholderService
 
   # TODO replace multiple placeholders more efficiently
   # TODO allow custom placeholders via hash
-  def replace_placeholders(str, fullname: nil)
+  def replace_placeholders(str, fullname: nil, customs: nil)
     str = replace_kind(str, fullname) if fullname
+
+    if customs
+      customs_regex = /\{\{(#{Regexp.union(customs.keys.map(&:to_s)).source})\}\}/i
+      str = str.gsub(customs_regex) { |match| customs[Regexp.last_match(1).to_sym] }
+    end
+
     str
   end
 

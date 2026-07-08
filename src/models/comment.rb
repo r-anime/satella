@@ -1,7 +1,7 @@
 class Comment < ActiveRecord::Base
   self.table_name = 'comments'
 
-  belongs_to :author, class_name: 'User', optional: true
+  belongs_to :user, primary_key: "username", foreign_key: "author", optional: true
   belongs_to :post
   belongs_to :parent, class_name: "Comment", optional: true
   has_many :comments, class_name: "Comment", foreign_key: "parent_id", dependent: :destroy

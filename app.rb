@@ -10,6 +10,7 @@ Signal.trap("TERM") do
   exit
 end
 
+require_relative './src/services/discord_service'
 require_relative './src/services/placeholder_service'
 require_relative './src/services/rabbit_service'
 require_relative './src/services/reddit_service'
@@ -26,11 +27,13 @@ def main
     password: ENV['REDDIT_USER_PASSWORD']
   )
 
+  discord = DiscordService.new
+
   placeholder_service = PlaceholderService.new
   rules_config = RulesConfig.new(reddit:, placeholder_service:)
   reddit.rules_config = rules_config
   Rules.rule_modules.each do |rule|
-    rule.new(reddit:, rules_config:, placeholder_service:)
+    rule.new(reddit:, discord:, rules_config:, placeholder_service:)
   end
   rules_config.start_up!
 

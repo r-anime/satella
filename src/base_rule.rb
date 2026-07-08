@@ -4,11 +4,12 @@ require_relative './rule_result'
 # it should parse auto mod and provide baseline checks for anything that is there
 # it should have a list of auto mod fields to ignore.
 class BaseRule
-  attr_reader :reddit
+  attr_reader :reddit, :discord
   attr_accessor :rules_config, :placeholder_service
 
-  def initialize(reddit:, rules_config:, placeholder_service:)
+  def initialize(reddit:, discord:, rules_config:, placeholder_service:)
     @reddit = reddit
+    @discord = discord
     @rules_config = rules_config
     rules_config.add_rule_module(self)
     @placeholder_service = placeholder_service
