@@ -12,13 +12,7 @@ module Rules
     end
 
     def on_upsert
-      @flair_configs = config["body"]["flair_configs"].flat_map do |flair_config|
-        Array(flair_config["flairs"]).map do |flair|
-          [flair, flair_config.symbolize_keys.merge(flairs: Array(flair_config["flairs"]))]
-        end
-      end.map do |(flair, c)|
-        [flair, c.merge(human_flairs: c[:flairs].join("/"))]
-      end.to_h
+      @flair_configs = @flair_configs = parse_multi_flair_config
       @removal_comment_template = @placeholder_service.replace_template_placeholders(config["comment"])
       @ignore_command = config["body"]["exemption_comment_commands"]["ignore_command"].downcase
       @unignore_command = config["body"]["exemption_comment_commands"]["unignore_command"].downcase
