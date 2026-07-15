@@ -9,7 +9,7 @@ gem "openssl", "~> 4.0"
 gem "yaml", "~> 0.4.0"
 
 gem "bunny", "~> 3.1"
-gem "redd", github: "nikita015/redd" #"~> 0.8.8"
+gem "redd", github: "baseballlover723/redd" #"~> 0.8.8"
 
 gem "activerecord", "~> 8.1"
 gem "activesupport", "~> 8.0"

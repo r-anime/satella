@@ -1,6 +1,6 @@
 GIT
-  remote: https://github.com/nikita015/redd
-  revision: d905ef598f5d28ea0502bcce0a4d47e502453711
+  remote: https://github.com/baseballlover723/redd
+  revision: 2efab8ef052b2df4b1d648fd339c34aef3476281
   specs:
     redd (0.9.0.pre.3)
       http (>= 4.0, < 6.0)
