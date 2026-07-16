@@ -1,5 +1,6 @@
 require 'redd'
 require 'yaml'
+require 'json'
 
 class RedditService
   MAX_REPORT_REASON_LENGTH = 100
@@ -16,6 +17,10 @@ class RedditService
 
   def fetch_automod_rules(subreddit)
     YAML.load_stream(get("/r/#{subreddit}/wiki/config/automoderator").body[:data][:content_md])
+  end
+
+  def fetch_toolbox(subreddit)
+    JSON.parse(get("/r/#{subreddit}/wiki/toolbox").body[:data][:content_md], symbolize_names: true)
   end
 
   # combined actions

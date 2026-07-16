@@ -5,14 +5,15 @@ require_relative './rule_result'
 # it should have a list of auto mod fields to ignore.
 class BaseRule
   attr_reader :reddit, :discord
-  attr_accessor :rules_config, :placeholder_service
+  attr_accessor :rules_config, :placeholder_service, :toolbox_service
 
-  def initialize(reddit:, discord:, rules_config:, placeholder_service:)
+  def initialize(reddit:, discord:, rules_config:, placeholder_service:, toolbox_service:)
     @reddit = reddit
     @discord = discord
     @rules_config = rules_config
     rules_config.add_rule_module(self)
     @placeholder_service = placeholder_service
+    @toolbox_service = toolbox_service
   end
 
   # @abstract true
@@ -241,5 +242,24 @@ class BaseRule
       .map { |attr| "#{attr}=#{send(attr)&.inspect}" }
       .join(', ')
     "#<#{self.class} #{attrs}>"
+  end
+
+  protected
+
+  # @overridable false
+  # @helper true
+  # @fast true
+  # A helper method to parse and handle config that can apply to multiple flairs and should be linked together.
+  # @param an block for doing a calculated config for a specific flair. Yields the unmodified specific flair config
+  # @return a hash of each flairs configuration
+  def parse_multi_flair_config
+    config["body"]["flair_configs"].flat_map do |flair_config|
+      Array(flair_config["flairs"]).map do |flair|
+        merged_flair_config = flair_config.symbolize_keys.merge(flairs: Array(flair_config["flairs"]))
+        [flair, block_given? ? yield(merged_flair_config) : merged_flair_config]
+      end
+    end.map do |(flair, c)|
+      [flair, c.merge(human_flairs: c[:flairs].join("/"))]
+    end.to_h
   end
 end
