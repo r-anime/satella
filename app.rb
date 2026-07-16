@@ -15,6 +15,7 @@ require_relative './src/services/placeholder_service'
 require_relative './src/services/rabbit_service'
 require_relative './src/services/reddit_service'
 require_relative './src/services/toolbox_service'
+require_relative './src/services/youtube_service'
 require_relative './src/db'
 require_relative './src/rules_config'
 require_relative './src/rules'
@@ -32,11 +33,12 @@ def main
 
   placeholder_service = PlaceholderService.new
   toolbox_service = ToolboxService.new(reddit:, discord:)
+  youtube_service = YouTubeService.new(ENV['YOUTUBE_API_TOKEN'])
 
   rules_config = RulesConfig.new(reddit:, discord:, placeholder_service:)
   reddit.rules_config = rules_config
   Rules.rule_modules.each do |rule|
-    rule.new(reddit:, discord:, rules_config:, placeholder_service:, toolbox_service: )
+    rule.new(reddit:, discord:, rules_config:, placeholder_service:, toolbox_service:, youtube_service:)
   end
   toolbox_service.fetch_toolbox!
   rules_config.start_up!

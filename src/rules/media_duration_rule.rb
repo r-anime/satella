@@ -17,12 +17,14 @@ module Rules
     end
 
     def static_post_check?(rabbit_message)
-      rabbit_message[:reddit][:is_video] && @flair_configs[rabbit_message[:reddit][:link_flair_text]]
+      @flair_configs[rabbit_message[:reddit][:link_flair_text]] && (
+        rabbit_message[:reddit][:is_video] || rabbit_message.dig(:reddit, :media, :type) == 'youtube.com'
+      )
     end
 
     def post_check(rabbit_message)
       flair_config = @flair_configs[rabbit_message[:reddit][:link_flair_text]]
-      duration = rabbit_message[:reddit][:media][:reddit_video][:duration]
+      duration = rabbit_message.dig(:reddit, :media, :reddit_video, :duration) || fetch_duration!(rabbit_message[:reddit][:media])
 
       return RuleResult::NoAction.new(rule_module: self, rabbit_message:) if flair_config[:duration_range].include?(duration)
 
@@ -32,6 +34,13 @@ module Rules
     def execute_post(custom_action)
       super(custom_action)
       reddit.remove_with_reason(custom_action.rabbit_message[:reddit][:name], custom_action.args[:removal_text])
+    end
+
+    private
+
+    def fetch_duration!(media)
+      id = media[:oembed][:thumbnail_url].split('/vi/').last.split('/').first
+      youtube_service.fetch_video_duration(id)
     end
   end
 end
