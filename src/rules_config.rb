@@ -4,12 +4,13 @@ require_relative './models/user'
 class RulesConfig
   ID_PREFIX = "AnimeMod 2.0: "
 
-  attr_accessor :reddit, :placeholder_service
+  attr_accessor :reddit, :discord, :placeholder_service
   attr_reader :rule_modules, :configs, :active_rule_modules, :mods
   attr_accessor :removal_header_template, :removal_footer_template
 
-  def initialize(reddit:, placeholder_service:)
+  def initialize(reddit:, discord:, placeholder_service:)
     @reddit = reddit
+    @discord = discord
     @placeholder_service = placeholder_service
     @rule_modules = []
     @configs = {}
@@ -31,6 +32,7 @@ class RulesConfig
   # Fetches the automod config from the wiki, and then updates all the rule module configs
   # @return nil
   def fetch_config!
+    @discord.clear_urgent_messages!
     automod_configs = @reddit.fetch_automod_rules(ENV['SUBREDDIT_NAME_TO_ACT_ON'])
     $logger.debug { "Fetched automod rules" }
 
@@ -47,16 +49,23 @@ class RulesConfig
 
     new_active_rule_modules = @rule_modules.select do |rule_module|
       rule_module.no_automod_config? || new_configs.include?(rule_module.name)
-    end.each do |rule_module|
-      rule_module.base_on_upsert
-      rule_module.on_upsert
+    end.select do |rule_module|
+      begin
+        rule_module.base_on_upsert
+        rule_module.on_upsert
+        true
+      rescue StandardError => e
+        $logger.error { "#{rule_module.name} experienced an error on upsert and has been **disabled**: #{e.inspect}\n#{e.backtrace.join("\n")}" }
+        @discord.add_urgent_message!("#{rule_module.name} experienced an error on upsert and has been **disabled**: #{e.inspect}")
+        false
+      end
     end.sort_by do |rule_module|
       [-rule_module.priority, config_indexes[rule_module.name]]
     end
 
     @active_rule_modules = new_active_rule_modules
-    $logger.info { "Successfully updated rules config, active rules: #{@active_rule_modules.map(&:to_short_s)}" }
-
+    had_urgent_messages = @discord.flush_urgent_messages!
+    $logger.info { "Successfully updated rules config#{had_urgent_messages ? "with urgent messages" : ""}, active rules: #{@active_rule_modules.map(&:to_short_s)}" }
     nil
   end
 

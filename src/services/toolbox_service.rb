@@ -2,11 +2,12 @@ require 'nokogiri'
 require 'uri'
 
 class ToolboxService
-  attr_reader :reddit
+  attr_reader :reddit, :discord
   attr_accessor :config
 
-  def initialize(reddit:)
+  def initialize(reddit:, discord:)
     @reddit = reddit
+    @discord = discord
     @config = {}
   end
 
@@ -22,10 +23,17 @@ class ToolboxService
   # A helper method that find the toolbox removal reason and optionally bold a selected identifier.
   # Other selects will use the preselected value
   # @return the markdown to remove with
-  def parse_toolbox_removal_reason(exact_title:, bold_substring_identifier: nil)
+  def parse_toolbox_removal_reason(module_name:, exact_title:, bold_substring_identifier: nil)
     raw_html = config[:removalReasons][:reasons].find do |removal_reason|
       removal_reason[:title] == exact_title
-    end[:text]
+    end&.dig(:text)
+
+    if raw_html.nil?
+      discord.add_urgent_message!(
+        "Rule Module \"#{module_name}\" could not find the toolbox removal reason \"#{exact_title}\". Non informative removal message will be used instead."
+      )
+      return "Removal reason text not found"
+    end
 
     html = Nokogiri::HTML::DocumentFragment.parse(raw_html)
 
