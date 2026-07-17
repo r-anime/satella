@@ -8,6 +8,7 @@ module Rules
       @flair_configs = parse_multi_flair_config do |flair_config|
         flair_config[:duration_range] = (flair_config[:min_duration]..flair_config[:max_duration])
         flair_config[:removal_text] = toolbox_service.parse_toolbox_removal_reason(
+          module_name: name,
           exact_title: flair_config[:toolbox_removal_title],
           bold_substring_identifier: flair_config[:toolbox_bold_substring_identifier]
         )

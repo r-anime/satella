@@ -31,8 +31,9 @@ def main
   discord = DiscordService.new
 
   placeholder_service = PlaceholderService.new
-  toolbox_service = ToolboxService.new(reddit: )
-  rules_config = RulesConfig.new(reddit:, placeholder_service:)
+  toolbox_service = ToolboxService.new(reddit:, discord:)
+
+  rules_config = RulesConfig.new(reddit:, discord:, placeholder_service:)
   reddit.rules_config = rules_config
   Rules.rule_modules.each do |rule|
     rule.new(reddit:, discord:, rules_config:, placeholder_service:, toolbox_service: )
