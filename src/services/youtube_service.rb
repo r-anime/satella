@@ -9,9 +9,19 @@ class YouTubeService
     @client.key = api_token
   end
 
+  def extract_id(media)
+    media[:oembed][:thumbnail_url].split('/vi/').last.split('/').first
+  end
+
   def fetch_video_duration(id)
     $logger.debug { "Fetching YouTube duration for #{id}" }
     response = @client.list_videos('contentDetails', id:)
     ISO8601::Duration.new(response.items.first.content_details.duration).to_seconds.to_i
+  end
+
+  def fetch_video_resolution(id)
+    $logger.debug { "Fetching YouTube resolution for #{id}" }
+    response = @client.list_videos('contentDetails', id:)
+    response.items.first.content_details.definition
   end
 end

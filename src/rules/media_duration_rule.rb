@@ -39,7 +39,7 @@ module Rules
     private
 
     def fetch_duration!(media)
-      id = media[:oembed][:thumbnail_url].split('/vi/').last.split('/').first
+      id = youtube_service.extract_id(media)
       youtube_service.fetch_video_duration(id)
     end
   end
