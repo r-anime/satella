@@ -5,15 +5,16 @@ require_relative './rule_result'
 # it should have a list of auto mod fields to ignore.
 class BaseRule
   attr_reader :reddit, :discord
-  attr_accessor :rules_config, :placeholder_service, :toolbox_service
+  attr_accessor :rules_config, :placeholder_service, :toolbox_service, :youtube_service
 
-  def initialize(reddit:, discord:, rules_config:, placeholder_service:, toolbox_service:)
+  def initialize(reddit:, discord:, rules_config:, placeholder_service:, toolbox_service:, youtube_service:)
     @reddit = reddit
     @discord = discord
     @rules_config = rules_config
     rules_config.add_rule_module(self)
     @placeholder_service = placeholder_service
     @toolbox_service = toolbox_service
+    @youtube_service = youtube_service
   end
 
   # @abstract true
