@@ -75,7 +75,7 @@ GEM
       multi_json (~> 1.11)
       representable (~> 3.0)
       retriable (>= 3.1, < 5.0)
-    google-apis-youtube_v3 (0.66.0)
+    google-apis-youtube_v3 (0.67.0)
       google-apis-core (>= 0.15.0, < 2.a)
     google-cloud-env (2.4.0)
       base64 (~> 0.2)
@@ -195,7 +195,7 @@ DEPENDENCIES
   activesupport (~> 8.0)
   bunny (~> 3.1)
   dotenv (~> 3.2)
-  google-apis-youtube_v3 (~> 0.66.0)
+  google-apis-youtube_v3 (~> 0.67.0)
   httparty (~> 0.24.2)
   iso8601 (~> 0.13.0)
   json (~> 2.21)
@@ -238,7 +238,7 @@ CHECKSUMS
   ffi (1.17.3-x86_64-linux-musl) sha256=086b221c3a68320b7564066f46fed23449a44f7a1935f1fe5a245bd89d9aea56
   ffi-compiler (1.3.2) sha256=a94f3d81d12caf5c5d4ecf13980a70d0aeaa72268f3b9cc13358bcc6509184a0
   google-apis-core (1.2.4) sha256=da9d12dbc7a3fbf3a68fc461e23e6f23245e57ab3b47eb71137d4dcf61a686b3
-  google-apis-youtube_v3 (0.66.0) sha256=8e7f0e1a533cb0affeb5724f5e896893a6a2cdda37fbd7f2048fa5ba68c7528d
+  google-apis-youtube_v3 (0.67.0) sha256=76ef64d38dd915c26232ba7a4c455636642a27b6ac7d8e4d9ce0e5d3a494c064
   google-cloud-env (2.4.0) sha256=01cb35ecee5d1c4d1cd4deaed8bb5bddc838e296bcc2a35c5d1ddd07ce40d28d
   google-logging-utils (0.2.0) sha256=675462b4ea5affa825a3442694ca2d75d0069455a1d0956127207498fca3df7b
   googleauth (1.17.1) sha256=0f7e6fc70e204cee1b2d71f1e1de2d3b349d432404197fe68ebf7fa23d0821b9
