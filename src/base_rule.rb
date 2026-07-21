@@ -5,13 +5,13 @@ require_relative './rule_result'
 # it should have a list of auto mod fields to ignore.
 class BaseRule
   attr_reader :reddit, :discord
-  attr_accessor :rules_config, :placeholder_service, :toolbox_service, :youtube_service
+  attr_accessor :config, :rules_config, :placeholder_service, :toolbox_service, :youtube_service
 
-  def initialize(reddit:, discord:, rules_config:, placeholder_service:, toolbox_service:, youtube_service:)
+  def initialize(config:, reddit:, discord:, rules_config:, placeholder_service:, toolbox_service:, youtube_service:)
+    @config = config
     @reddit = reddit
     @discord = discord
     @rules_config = rules_config
-    rules_config.add_rule_module(self)
     @placeholder_service = placeholder_service
     @toolbox_service = toolbox_service
     @youtube_service = youtube_service
@@ -21,8 +21,16 @@ class BaseRule
   # @fast true
   # The name of the rule (without the prefix), to be matched against the id field in automod config
   # @return string
-  def name
+  def self.name
     raise NotImplementedError, "#{self.class} must implement #name"
+  end
+
+  # @abstract true
+  # @fast true
+  # The name of the rule (without the prefix), to be matched against the id field in automod config
+  # @return string
+  def name
+    self.class.name
   end
 
   # @overrideable false
@@ -52,14 +60,6 @@ class BaseRule
   end
 
   # @fast true
-  # gets the config for the given rule module
-  # @return nil if there is no automod config for the rule module
-  # @return the automod config in json form if it exists
-  def config
-    rules_config.config(name)
-  end
-
-  # @fast true
   # gets the priority of the rule for the order they should be processed in
   # @return integer
   def priority
@@ -71,8 +71,17 @@ class BaseRule
   # Use this if it should always be active and doesn't have an automod config
   # This is mainly for internal use only, for rules like the RuleUpdaterRule
   # @return boolean
-  def no_automod_config?
+  def self.no_automod_config?
     false
+  end
+
+  # @overridable true
+  # @parallel false
+  # Use this if it should always be active and doesn't have an automod config
+  # This is mainly for internal use only, for rules like the RuleUpdaterRule
+  # @return boolean
+  def no_automod_config?
+    self.class.no_automod_config?
   end
 
   # @overridable false

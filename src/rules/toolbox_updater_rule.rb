@@ -3,7 +3,7 @@ module Rules
     ACTION = 'wikirevise'
     DETAIL = 'Page toolbox edited'
 
-    def name
+    def self.name
       "Toolbox Updater Rule"
     end
 
@@ -15,7 +15,7 @@ module Rules
       99999
     end
 
-    def no_automod_config?
+    def self.no_automod_config?
       true
     end
 

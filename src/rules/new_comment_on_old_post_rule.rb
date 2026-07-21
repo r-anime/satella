@@ -3,7 +3,7 @@ require "active_support/core_ext/numeric/time"
 
 module Rules
   class NewCommentOnOldPostRule < BaseRule
-    def name
+    def self.name
       "New Comment On Old Post Rule"
     end
 

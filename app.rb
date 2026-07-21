@@ -35,11 +35,9 @@ def main
   toolbox_service = ToolboxService.new(reddit:, discord:)
   youtube_service = YouTubeService.new(ENV['YOUTUBE_API_TOKEN'])
 
-  rules_config = RulesConfig.new(reddit:, discord:, placeholder_service:)
+  rules_config = RulesConfig.new(reddit:, discord:, placeholder_service:, toolbox_service:, youtube_service:)
   reddit.rules_config = rules_config
-  Rules.rule_modules.each do |rule|
-    rule.new(reddit:, discord:, rules_config:, placeholder_service:, toolbox_service:, youtube_service:)
-  end
+
   toolbox_service.fetch_toolbox!
   rules_config.start_up!
 
@@ -52,21 +50,21 @@ def main
     password: ENV['RABBITMQ_PASS'],
     vhost: ENV['RABBITMQ_VHOST'],
     retry_exchange_name: "#{ENV['RABBITMQ_EXCHANGE']}.#{ENV['RABBITMQ_RETRY_EXCHANGE_PREFIX']}",
-    queues: get_queues(rules_config.active_rule_modules),
+    queues: get_queues(rules_config),
     log_level: ENV['LOG_LEVEL_CONSOLE']
   )
 
   rabbit.listen!
 end
 
-def get_queues(active_rule_modules)
+def get_queues(rules_config)
   missing = []
   queues = ENV.select { |k, _| k.start_with?(RabbitService::RABBIT_QUEUE_ENV_PREFIX) }
               .transform_keys { |k| k.delete_prefix(RabbitService::RABBIT_QUEUE_ENV_PREFIX).downcase.to_sym }
               .map do |queue_key, queue_name|
     handler_name = "handle_#{queue_key.to_s.singularize}"
     missing << handler_name unless respond_to?(handler_name, true)
-    [queue_key, {queue_name: queue_name, handler: method(handler_name).curry.call(active_rule_modules)}] if respond_to?(handler_name, true)
+    [queue_key, {queue_name: queue_name, handler: method(handler_name).curry.call(rules_config)}] if respond_to?(handler_name, true)
   end.compact.to_h
 
   raise NoMethodError, "Missing handler methods: #{missing.join(', ')}" if missing.any?
@@ -74,14 +72,14 @@ def get_queues(active_rule_modules)
   queues
 end
 
-def handle_post(active_rule_modules, message)
+def handle_post(rules_config, message)
   if $logger.level <= Logger::TRACE
     $logger.trace { "[posts] Received: #{JSON.generate(message)}" }
   else
     $logger.info { "[posts] Received: #{message[:reddit][:id]}" }
   end
 
-  results = active_rule_modules
+  results = rules_config.active_rule_modules
     .select { |rule_module| rule_module.base_static_post_check?(message) }
     .select { |rule_module| rule_module.static_post_check?(message) }
     .map { |rule_module| ActiveRecord::Base.connection.cache { rule_module.post_check(message) } }
@@ -90,14 +88,14 @@ def handle_post(active_rule_modules, message)
   results.each { |rule_result| ActiveRecord::Base.connection.cache { rule_result.rule_module.execute_post(rule_result) } }
 end
 
-def handle_comment(active_rule_modules, message)
+def handle_comment(rules_config, message)
   if $logger.level <= Logger::TRACE
     $logger.trace { "[comments] Received: #{JSON.generate(message)}" }
   else
     $logger.info { "[comments] Received: #{message[:reddit][:id]}" }
   end
 
-  results = active_rule_modules
+  results = rules_config.active_rule_modules
     .select { |rule_module| rule_module.base_static_comment_check?(message) }
     .select { |rule_module| rule_module.static_comment_check?(message) }
     .map { |rule_module| ActiveRecord::Base.connection.cache { rule_module.comment_check(message) } }
@@ -106,14 +104,14 @@ def handle_comment(active_rule_modules, message)
   results.map { |rule_result| ActiveRecord::Base.connection.cache { rule_result.rule_module.execute_comment(rule_result) } }
 end
 
-def handle_mod_action(active_rule_modules, message)
+def handle_mod_action(rules_config, message)
   if $logger.level <= Logger::TRACE
     $logger.trace { "[mod_actions] Received: #{JSON.generate(message)}" }
   else
     $logger.info { "[mod_actions] Received: #{message[:reddit][:id]}" }
   end
 
-  results = active_rule_modules
+  results = rules_config.active_rule_modules
     .select { |rule_module| rule_module.base_static_mod_action_check?(message) }
     .select { |rule_module| rule_module.static_mod_action_check?(message) }
     .map { |rule_module| ActiveRecord::Base.connection.cache { rule_module.mod_action_check(message) } }

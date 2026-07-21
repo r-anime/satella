@@ -1,6 +1,6 @@
 module Rules
   class SourceCornerCreationRuleIsekaiQuartet < SourceCornerCreationRule
-    def name
+    def self.name
       "Source Corner Creation Rule (Isekai Quartet)"
     end
 

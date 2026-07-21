@@ -2,7 +2,7 @@ module Rules
   class ModUpdaterRule < BaseRule
     ACTIONS = Set.new(['removemoderator', 'acceptmoderatorinvite'])
 
-    def name
+    def self.name
       "Mod Updater Rule"
     end
 
@@ -14,7 +14,7 @@ module Rules
       99999
     end
 
-    def no_automod_config?
+    def self.no_automod_config?
       true
     end
 
