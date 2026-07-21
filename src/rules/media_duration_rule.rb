@@ -1,6 +1,6 @@
 module Rules
   class MediaDurationRule < BaseRule
-    def name
+    def self.name
       "Media Duration Rule"
     end
 

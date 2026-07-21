@@ -4,7 +4,7 @@ require 'time'
 module Rules
   # TODO consider making more generic, probably need StandardRule for that though
   class EpisodeDiscussionTempCommentSortRule < BaseRule
-    def name
+    def self.name
       "Episode Discussion Temp Comment Sort Rule"
     end
 

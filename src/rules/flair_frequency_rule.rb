@@ -7,7 +7,7 @@ module Rules
     DISCORD_UNIGNORE_COLOR = 0xFFFFFF
     SECONDS_IN_A_DAY = 60 * 60 * 24
 
-    def name
+    def self.name
       "Flair Frequency Rule"
     end
 

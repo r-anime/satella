@@ -1,6 +1,6 @@
 module Rules
   class SourceCornerCreationRule < BaseRule
-    def name
+    def self.name
       "Source Corner Creation Rule"
     end
 

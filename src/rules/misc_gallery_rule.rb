@@ -1,6 +1,6 @@
 module Rules
   class MiscGalleryRule < BaseRule
-    def name
+    def self.name
       "Misc Gallery Rule"
     end
 

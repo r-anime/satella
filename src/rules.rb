@@ -7,6 +7,14 @@ end
 
 module Rules
   def self.rule_modules
-    BaseRule.descendants
+    @@rule_modules ||= BaseRule.descendants.map do |rule_module|
+      [rule_module.name, rule_module]
+    end.to_h
+  end
+
+  def self.non_automod_rule_modules
+    rule_modules.values.select do |rule_module|
+      rule_module.no_automod_config?
+    end
   end
 end

@@ -2,7 +2,7 @@ require 'time'
 
 module Rules
   class SourceCornerReportingRule < BaseRule
-    def name
+    def self.name
       "Source Corner Reporting Rule"
     end
 
