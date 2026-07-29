@@ -12,7 +12,7 @@ gem "bunny", "~> 3.1"
 gem "redd", github: "baseballlover723/redd" #"~> 0.8.8"
 
 gem "activerecord", "~> 8.1"
-gem "activesupport", "~> 8.0"
+gem "activesupport", "~> 8.1"
 gem "pg", "~> 1.6"
 
 gem "dotenv", "~> 3.2"
