@@ -9,6 +9,7 @@ class DiscordService
   URGENT_MESSAGE_FOOTER = "*Aishiteru*"
 
   def initialize
+    @deployed = ["prod", "stage"].include?(ENV["ENV"]&.downcase)
     @enabled = ENV["DISCORD_ENABLED"]&.downcase == "true"
     @webhook_url = ENV["DISCORD_WEBHOOK_URL"]
     @post_webhook_url = ENV["DISCORD_POST_WEBHOOK_URL"]
@@ -56,10 +57,9 @@ class DiscordService
   end
 
   def post_urgent_message_webhook(message, force: false)
-    return unless @enabled || force
+    return unless @enabled || (force && @deployed)
 
     HTTParty.post(
-      # @sub_mod_main_webhook_url,
       @sub_urgent_message_webhook_url,
       headers: {
         "Content-Type" => "application/json"
