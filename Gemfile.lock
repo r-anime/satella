@@ -105,7 +105,7 @@ GEM
     i18n (1.15.2)
       concurrent-ruby (~> 1.0)
     iso8601 (0.13.0)
-    json (2.21.2)
+    json (3.0.2)
     jwt (3.3.0)
       base64
     lazy_lazer (0.8.1)
@@ -202,7 +202,7 @@ DEPENDENCIES
   google-apis-youtube_v3 (~> 0.71.0)
   httparty (~> 0.24.3)
   iso8601 (~> 0.13.0)
-  json (~> 2.21)
+  json (~> 3.0)
   nokogiri (~> 1.19)
   openssl (~> 4.0)
   pg (~> 1.7)
@@ -252,7 +252,7 @@ CHECKSUMS
   httparty (0.24.3) sha256=5c95cf29ca70d5bfd834e56140ddfca6e94166c3b870cde9c25d157cdb5a00d2
   i18n (1.15.2) sha256=00f9eb62412fe593b2a65a97daa75300d37abb8f7202ec748e94b6d46a9dd1b5
   iso8601 (0.13.0) sha256=298c2b15b7be5fa95a1372813d36a2257656cd8e906dfbc1f5cb409851425aa2
-  json (2.21.2) sha256=1f1d3b7cf2b3ba1a69beca0bb6db13d5438b80bff3cd54cdaaa620b9b07c1c6a
+  json (3.0.2) sha256=8e6d7e7b11384c21230430cef90b71f14849a34a1f4452796670f7c981bd19df
   jwt (3.3.0) sha256=44cc34fbc341c148233cf66641522b4bce0dfb1ce55e8073f05c56f44f4ee546
   lazy_lazer (0.8.1) sha256=e4d36e2098f7c2def80d80a928c466297548fff2ab9da6796a8acdd7043a2a3a
   llhttp-ffi (0.5.1) sha256=9a25a7fc19311f691a78c9c0ac0fbf4675adbd0cca74310228fdf841018fa7bc
