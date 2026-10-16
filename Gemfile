@@ -4,7 +4,7 @@ source "https://rubygems.org"
 ruby "~> 4.0"
 git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
-gem "json", "~> 3.0"
+gem "json", "~> 3.1"
 gem "openssl", "~> 4.0"
 gem "yaml", "~> 0.4.0"
 
@@ -20,4 +20,4 @@ gem "httparty", "~> 0.24.3"
 gem "nokogiri", "~> 1.19"
 gem "iso8601", "~> 0.13.0"
 
-gem "google-apis-youtube_v3", "~> 0.71.0"
+gem "google-apis-youtube_v3", "~> 0.72.0"
