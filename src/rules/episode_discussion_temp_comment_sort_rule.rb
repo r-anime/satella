@@ -20,6 +20,21 @@ module Rules
 
       @cache_reset_processed = Hash.new(false) # TODO remove with proper delay
       @cache_reset_time = {} # TODO remove with proper delay
+
+      # optimize by checking which posts we've already double set the suggested sort, and thus have reset already to avoid spamming the log
+      Post
+        .where(created_time: 6.months.ago..6.hours.ago)
+        .where(
+          id: ModAction
+            .where(action: "setsuggestedsort")
+            .where("lower(mod) = ?", "animemod")
+            .where(created_time: 6.months.ago..Time.current)
+            .group(:target_post_id)
+            .having("COUNT(*) >= 2")
+            .select(:target_post_id)
+        )
+        .pluck(:id)
+        .each { |id| @cache_reset_processed[id] = true }
     end
 
     def static_post_check?(rabbit_message)
