@@ -133,7 +133,7 @@ module Rules
       end
       $logger.debug { "#{self.class.name}: prod_to_stage_id_map: #{prod_to_stage_id_map}" }
 
-      staging_widgets[:items].each do |staging_widget_id, staging_widget_data|
+      staging_widgets[:items].keys.each do |staging_widget_id|
         next if staging_widget_id.to_s.include?("-")
         $logger.info { "#{self.class.name}: deleting staging widget id: #{staging_widget_id}" }
         @reddit.delete_widget(staging_widget_id, subreddit: "animestaging")
