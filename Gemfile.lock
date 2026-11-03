@@ -33,7 +33,7 @@ GEM
     amq-protocol (2.9.0)
     base64 (0.3.0)
     bigdecimal (4.1.3)
-    bunny (3.4.0)
+    bunny (3.5.0)
       amq-protocol (~> 2.9)
       logger (~> 1, >= 1.7)
       openssl (>= 3.3)
@@ -197,7 +197,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord (~> 8.1)
   activesupport (~> 8.0)
-  bunny (~> 3.4)
+  bunny (~> 3.5)
   dotenv (~> 3.2)
   google-apis-youtube_v3 (~> 0.73.0)
   httparty (~> 0.24.3)
@@ -218,7 +218,7 @@ CHECKSUMS
   base64 (0.3.0) sha256=27337aeabad6ffae05c265c450490628ef3ebd4b67be58257393227588f5a97b
   bigdecimal (4.1.3) sha256=61ebe1e5e559bdc3cc6f2c0ee7f427321fc838f59611c294356eb04d6e21cf66
   bundler (4.0.23) sha256=407ba8a1d928f412847f819aa5f8b6aef7c59fb51feb517112af8a165487287b
-  bunny (3.4.0) sha256=bc6937c242c13f2889a3aadfcaa164045e490097bacff86a0e2493d613ce1948
+  bunny (3.5.0) sha256=34e3322fdc556ec2ab44e64413f0c2d412eac029207995d57fc5b26adc92cd5c
   concurrent-ruby (1.3.8) sha256=b2f1be836e968ccc78ccfce277ea79c72a88633f22306782c16ff23fb415d1e1
   connection_pool (3.0.2) sha256=33fff5ba71a12d2aa26cb72b1db8bba2a1a01823559fb01d29eb74c286e62e0a
   csv (3.3.6) sha256=aba61e7e507a66f03d45cb1f3c4b6359861c3504038b422962875dce099e4456
