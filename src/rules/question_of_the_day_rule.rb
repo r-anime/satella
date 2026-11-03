@@ -5,7 +5,11 @@ module Rules
     end
 
     def on_upsert
-      @authors_regex = /#{Array(config["author"]["name"]).map { |a| Regexp.escape(a) }.join("|")}/i if config.dig("author", "name")
+      @authors_regex = if config.dig("author", "name")
+        /#{Array(config["author"]["name"]).map { |a| Regexp.escape(a) }.join("|")}/i
+      else
+        nil
+      end
       @flair_ids = Array(config["flair_template_id"]).to_set
       @title_prefix = config["title (starts-with)"]&.downcase
 
