@@ -204,7 +204,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord (~> 8.1)
-  activesupport (~> 8.0)
+  activesupport (~> 8.1)
   bunny (~> 3.5)
   dotenv (~> 3.2)
   google-apis-youtube_v3 (~> 0.73.0)
