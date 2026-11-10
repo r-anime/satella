@@ -59,13 +59,17 @@ class DiscordService
   def post_urgent_message_webhook(message, force: false)
     return unless @enabled || (force && @deployed)
 
-    HTTParty.post(
-      @sub_urgent_message_webhook_url,
-      headers: {
-        "Content-Type" => "application/json"
-      },
-      body: {content: message}.to_json
-    )
+    begin
+      HTTParty.post(
+        @sub_urgent_message_webhook_url,
+        headers: {
+          "Content-Type" => "application/json"
+        },
+        body: {content: message}.to_json
+      )
+    rescue StandardError => e
+      $logger.error("Failed to post urgent message webhook: #{e.class}: #{e.message}")
+    end
   end
 
   def add_urgent_message!(message)
