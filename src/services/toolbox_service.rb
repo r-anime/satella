@@ -39,14 +39,14 @@ class ToolboxService
 
     html.css("select").each do |select|
       options = select.css("option")
-      selected = options.find { |option| option["selected"] }
-      next_option = options[options.index(selected) + 1]
+      bolded_option = options.find { |option| option.text.start_with?("**") }
+      unbolded_option = options[options.index(bolded_option) - 1]
 
       select.replace(
-        if bold_substring_identifier && next_option["value"].include?(bold_substring_identifier)
-          next_option["value"]
+        if bold_substring_identifier && bolded_option.text.include?(bold_substring_identifier)
+          bolded_option.text
         else
-          selected["value"]
+          unbolded_option.text
         end
       )
     end
