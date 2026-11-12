@@ -30,11 +30,11 @@ GEM
       uri (>= 0.13.1)
     addressable (2.9.0)
       public_suffix (>= 2.0.2, < 8.0)
-    amq-protocol (2.9.0)
+    amq-protocol (2.10.0)
     base64 (0.3.0)
     bigdecimal (4.1.3)
-    bunny (3.5.0)
-      amq-protocol (~> 2.9)
+    bunny (3.6.0)
+      amq-protocol (~> 2.10)
       logger (~> 1, >= 1.7)
       openssl (>= 3.3)
       sorted_set (~> 1, >= 1.0.2)
@@ -205,7 +205,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord (~> 8.1)
   activesupport (~> 8.1)
-  bunny (~> 3.5)
+  bunny (~> 3.6)
   dotenv (~> 3.2)
   google-apis-youtube_v3 (~> 0.73.0)
   httparty (~> 0.24.3)
@@ -222,11 +222,11 @@ CHECKSUMS
   activerecord (8.1.4.1) sha256=bd65599ca0b5d210937f835d42c7aff69d271741c75aab022730be6cbce67e87
   activesupport (8.1.4.1) sha256=16ac4f341ca65c85a1fcdb8ac73f68891aae9e3c4a6f9c3a27daed8b00017ed7
   addressable (2.9.0) sha256=7fdf6ac3660f7f4e867a0838be3f6cf722ace541dd97767fa42bc6cfa980c7af
-  amq-protocol (2.9.0) sha256=6812dc5c1d7dea12b445854ad0000239e59009760079084310bd39f76397168e
+  amq-protocol (2.10.0) sha256=98b3fe83837401cd0a7ff008faf4a454a56dc0e8c569c12db65c9225b63fd60e
   base64 (0.3.0) sha256=27337aeabad6ffae05c265c450490628ef3ebd4b67be58257393227588f5a97b
   bigdecimal (4.1.3) sha256=61ebe1e5e559bdc3cc6f2c0ee7f427321fc838f59611c294356eb04d6e21cf66
   bundler (4.0.23) sha256=407ba8a1d928f412847f819aa5f8b6aef7c59fb51feb517112af8a165487287b
-  bunny (3.5.0) sha256=34e3322fdc556ec2ab44e64413f0c2d412eac029207995d57fc5b26adc92cd5c
+  bunny (3.6.0) sha256=64deb9bbcf1110d736a20ad03c69bde1671a8b30b0c366e8ac1438019af6f230
   concurrent-ruby (1.3.8) sha256=b2f1be836e968ccc78ccfce277ea79c72a88633f22306782c16ff23fb415d1e1
   connection_pool (3.0.2) sha256=33fff5ba71a12d2aa26cb72b1db8bba2a1a01823559fb01d29eb74c286e62e0a
   csv (3.3.6) sha256=aba61e7e507a66f03d45cb1f3c4b6359861c3504038b422962875dce099e4456

@@ -8,7 +8,7 @@ gem "json", "~> 3.1"
 gem "openssl", "~> 4.0"
 gem "yaml", "~> 0.4.0"
 
-gem "bunny", "~> 3.5"
+gem "bunny", "~> 3.6"
 gem "redd", github: "baseballlover723/redd" #"~> 0.8.8"
 
 gem "activerecord", "~> 8.1"
