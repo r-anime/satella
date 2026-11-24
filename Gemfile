@@ -16,7 +16,7 @@ gem "activesupport", "~> 8.1"
 gem "pg", "~> 1.7"
 
 gem "dotenv", "~> 3.2"
-gem "httparty", "~> 0.24.3"
+gem "httparty", "~> 0.25.0"
 gem "nokogiri", "~> 1.19"
 gem "iso8601", "~> 0.13.0"
 
