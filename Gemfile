@@ -4,7 +4,7 @@ source "https://rubygems.org"
 ruby "~> 4.0"
 git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
-gem "json", "~> 3.1"
+gem "json", "~> 3.2"
 gem "openssl", "~> 4.0"
 gem "yaml", "~> 0.4.0"
 
@@ -16,7 +16,7 @@ gem "activesupport", "~> 8.1"
 gem "pg", "~> 1.7"
 
 gem "dotenv", "~> 3.2"
-gem "httparty", "~> 0.24.3"
+gem "httparty", "~> 0.25.1"
 gem "nokogiri", "~> 1.19"
 gem "iso8601", "~> 0.13.0"
 
